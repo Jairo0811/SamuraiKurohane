@@ -62,11 +62,12 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             BuildAtmosphericDepth();
             BuildRain();
             BuildPrototypeSpawn();
+            BuildHeroFocusLight();
 
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.ExponentialSquared;
-            RenderSettings.fogDensity = 0.0038f;
-            RenderSettings.fogColor = new Color(0.16f, 0.03f, 0.04f);
+            RenderSettings.fogDensity = 0.0032f;
+            RenderSettings.fogColor = new Color(0.19f, 0.04f, 0.05f);
         }
 
         private void ConfigureScene()
@@ -95,13 +96,13 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             }
 
             RenderSettings.ambientMode = AmbientMode.Flat;
-            RenderSettings.ambientLight = new Color(0.28f, 0.07f, 0.08f);
+            RenderSettings.ambientLight = new Color(0.32f, 0.085f, 0.095f);
         }
 
         private void CreateMaterials()
         {
-            stone = CreateMaterial("Stone", new Color(0.18f, 0.15f, 0.16f), 0.12f, 0.78f);
-            blackMetal = CreateMaterial("Black Metal", new Color(0.10f, 0.09f, 0.10f), 0.70f, 0.82f);
+            stone = CreateMaterial("Stone", new Color(0.23f, 0.18f, 0.19f), 0.12f, 0.82f);
+            blackMetal = CreateMaterial("Black Metal", new Color(0.14f, 0.12f, 0.13f), 0.72f, 0.88f);
             darkWood = CreateMaterial("Dark Wood", new Color(0.13f, 0.04f, 0.04f), 0.08f, 0.56f);
             roof = CreateMaterial("Roof", new Color(0.09f, 0.08f, 0.09f), 0.34f, 0.74f);
             crimson = CreateMaterial("Kurohane Crimson", new Color(0.38f, 0.012f, 0.018f), 0.22f, 0.34f);
@@ -111,8 +112,8 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
                 new Color(6.5f, 0.6f, 0.05f));
             moonMaterial = CreateMaterial("Blood Moon", new Color(0.55f, 0.02f, 0.025f), 0f, 0.1f,
                 new Color(2.7f, 0.02f, 0.03f));
-            waterMaterial = CreateMaterial("Canal", new Color(0.025f, 0.012f, 0.017f), 0.66f, 0.12f,
-                new Color(0.28f, 0.006f, 0.008f));
+            waterMaterial = CreateMaterial("Canal", new Color(0.055f, 0.02f, 0.028f), 0.72f, 0.42f,
+                new Color(0.42f, 0.02f, 0.03f));
             silhouette = CreateMaterial("Distant Silhouette", new Color(0.07f, 0.03f, 0.04f), 0f, 0.40f);
         }
 
@@ -211,6 +212,8 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
 
             CreateCube("Main Stone Deck", new Vector3(0f, -2.35f, 0f), new Vector3(39f, 1.15f, 5.8f), stone, true, bridge);
             CreateCube("Wet Surface", new Vector3(0f, -1.72f, -0.25f), new Vector3(39f, 0.12f, 5.2f), blackMetal, false, bridge);
+            CreateCube("Bridge Readability Strip", new Vector3(0f, -1.60f, -1.35f), new Vector3(39f, 0.03f, 1.8f), emissiveRed, false, bridge);
+            CreateCube("Bridge Readability Strip Rear", new Vector3(0f, -1.60f, 1.15f), new Vector3(39f, 0.03f, 1.2f), emissiveRed, false, bridge);
 
             // Thin emissive strips fake long rain reflections in the blockout.
             for (int i = 0; i < 13; i++)
@@ -287,13 +290,13 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             {
                 GameObject lightObject = new("Gameplay Fill Light");
                 lightObject.transform.SetParent(lighting, false);
-                lightObject.transform.position = new Vector3(x, 1.2f, -1.5f);
+                lightObject.transform.position = new Vector3(x, 1.35f, -1.2f);
 
                 Light light = lightObject.AddComponent<Light>();
                 light.type = LightType.Point;
-                light.range = 8f;
-                light.intensity = 2.2f;
-                light.color = new Color(1f, 0.32f, 0.10f);
+                light.range = 9f;
+                light.intensity = 3.0f;
+                light.color = new Color(1f, 0.34f, 0.12f);
                 light.shadows = LightShadows.None;
             }
         }
@@ -391,12 +394,28 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
         {
             Transform spawn = NewGroup("Akio Prototype Spawn");
 
-            GameObject body = CreateCapsule("Akio Blockout", new Vector3(-7.2f, -0.55f, -0.8f), new Vector3(0.65f, 1.25f, 0.65f), silhouette, false, spawn);
+            GameObject body = CreateCapsule("Akio Blockout", new Vector3(-7.2f, -0.55f, -0.8f), new Vector3(0.65f, 1.25f, 0.65f), stone, false, spawn);
             body.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
 
-            CreateCube("Kasa", new Vector3(-7.2f, 0.95f, -0.8f), new Vector3(1.5f, 0.12f, 1.2f), roof, false, spawn);
+            CreateCube("Kasa", new Vector3(-7.2f, 0.95f, -0.8f), new Vector3(1.5f, 0.12f, 1.2f), blackMetal, false, spawn);
             GameObject blade = CreateCube("Prototype Katana", new Vector3(-6.3f, -0.15f, -0.95f), new Vector3(1.5f, 0.07f, 0.08f), emissiveRed, false, spawn);
             blade.transform.rotation = Quaternion.Euler(0f, 0f, -18f);
+        }
+
+        private void BuildHeroFocusLight()
+        {
+            Transform heroLighting = NewGroup("Hero Focus Light");
+
+            GameObject lightObject = new("Akio Focus Light");
+            lightObject.transform.SetParent(heroLighting, false);
+            lightObject.transform.position = new Vector3(-6.8f, 1.4f, -1.6f);
+
+            Light light = lightObject.AddComponent<Light>();
+            light.type = LightType.Point;
+            light.range = 8.5f;
+            light.intensity = 3.4f;
+            light.color = new Color(1f, 0.30f, 0.10f);
+            light.shadows = LightShadows.None;
         }
 
         private void BuildPagoda(Transform parent, float x, float centerY, float height, float width, float z, Material material, bool collision)
