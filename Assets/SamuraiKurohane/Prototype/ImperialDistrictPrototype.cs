@@ -209,7 +209,14 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             Transform bridge = NewGroup("Main Combat Bridge");
 
             CreateCube("Main Stone Deck", new Vector3(0f, -2.35f, 0f), new Vector3(39f, 1.15f, 5.8f), stone, true, bridge);
-            CreateCube("Wet Surface", new Vector3(0f, -1.72f, -0.25f), new Vector3(39f, 0.12f, 5.2f), blackMetal, false, bridge);\n\n            // Thin emissive strips fake long rain reflections in the blockout.\n            for (int i = 0; i < 13; i++)\n            {\n                float x = -17f + i * 2.8f;\n                CreateCube("Wet Crimson Reflection", new Vector3(x, -1.63f, -1.1f), new Vector3(0.10f, 0.035f, 2.8f), emissiveRed, false, bridge);\n            }
+            CreateCube("Wet Surface", new Vector3(0f, -1.72f, -0.25f), new Vector3(39f, 0.12f, 5.2f), blackMetal, false, bridge);
+
+            // Thin emissive strips fake long rain reflections in the blockout.
+            for (int i = 0; i < 13; i++)
+            {
+                float x = -17f + i * 2.8f;
+                CreateCube("Wet Crimson Reflection", new Vector3(x, -1.63f, -1.1f), new Vector3(0.10f, 0.035f, 2.8f), emissiveRed, false, bridge);
+            }
 
             CreateCube("Lower Canal", new Vector3(0f, -7.4f, 5f), new Vector3(45f, 0.18f, 9f), waterMaterial, false, bridge);
 
