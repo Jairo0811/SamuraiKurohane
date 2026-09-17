@@ -57,13 +57,15 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             BuildSideArchitecture();
             BuildLanternNetwork();
             BuildToriiAndBanners();
+            BuildCrimsonGardens();
+            BuildAtmosphericDepth();
             BuildRain();
             BuildPrototypeSpawn();
 
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.ExponentialSquared;
-            RenderSettings.fogDensity = 0.009f;
-            RenderSettings.fogColor = new Color(0.055f, 0.012f, 0.015f);
+            RenderSettings.fogDensity = 0.006f;
+            RenderSettings.fogColor = new Color(0.11f, 0.018f, 0.025f);
         }
 
         private void ConfigureScene()
@@ -72,10 +74,10 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             if (camera != null)
             {
                 camera.orthographic = true;
-                camera.orthographicSize = 9.5f;
+                camera.orthographicSize = 8.7f;
                 camera.transform.position = new Vector3(0f, 2.2f, -28f);
                 camera.transform.rotation = Quaternion.identity;
-                camera.backgroundColor = new Color(0.018f, 0.006f, 0.009f);
+                camera.backgroundColor = new Color(0.055f, 0.012f, 0.018f);
                 camera.clearFlags = CameraClearFlags.SolidColor;
                 camera.nearClipPlane = 0.1f;
                 camera.farClipPlane = 160f;
@@ -86,21 +88,21 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             if (directional != null && directional.type == LightType.Directional)
             {
                 directional.color = new Color(0.62f, 0.15f, 0.12f);
-                directional.intensity = 1.25f;
+                directional.intensity = 1.85f;
                 directional.transform.rotation = Quaternion.Euler(42f, -28f, 0f);
                 directional.shadows = LightShadows.Soft;
             }
 
             RenderSettings.ambientMode = AmbientMode.Flat;
-            RenderSettings.ambientLight = new Color(0.07f, 0.018f, 0.025f);
+            RenderSettings.ambientLight = new Color(0.16f, 0.035f, 0.045f);
         }
 
         private void CreateMaterials()
         {
-            stone = CreateMaterial("Stone", new Color(0.055f, 0.055f, 0.06f), 0.15f, 0.58f);
-            blackMetal = CreateMaterial("Black Metal", new Color(0.018f, 0.02f, 0.024f), 0.72f, 0.24f);
-            darkWood = CreateMaterial("Dark Wood", new Color(0.045f, 0.018f, 0.017f), 0.08f, 0.56f);
-            roof = CreateMaterial("Roof", new Color(0.028f, 0.02f, 0.023f), 0.38f, 0.42f);
+            stone = CreateMaterial("Stone", new Color(0.11f, 0.095f, 0.10f), 0.15f, 0.72f);
+            blackMetal = CreateMaterial("Black Metal", new Color(0.055f, 0.05f, 0.055f), 0.72f, 0.70f);
+            darkWood = CreateMaterial("Dark Wood", new Color(0.095f, 0.025f, 0.025f), 0.08f, 0.50f);
+            roof = CreateMaterial("Roof", new Color(0.065f, 0.055f, 0.06f), 0.38f, 0.66f);
             crimson = CreateMaterial("Kurohane Crimson", new Color(0.38f, 0.012f, 0.018f), 0.22f, 0.34f);
             emissiveRed = CreateMaterial("Neon Crimson", new Color(0.42f, 0.01f, 0.012f), 0.18f, 0.2f,
                 new Color(5.2f, 0.035f, 0.025f));
@@ -110,7 +112,7 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
                 new Color(2.7f, 0.02f, 0.03f));
             waterMaterial = CreateMaterial("Canal", new Color(0.025f, 0.012f, 0.017f), 0.66f, 0.12f,
                 new Color(0.28f, 0.006f, 0.008f));
-            silhouette = CreateMaterial("Distant Silhouette", new Color(0.012f, 0.008f, 0.011f), 0f, 0.8f);
+            silhouette = CreateMaterial("Distant Silhouette", new Color(0.035f, 0.018f, 0.022f), 0f, 0.55f);
         }
 
         private Material CreateMaterial(string name, Color color, float metallic, float smoothness, Color? emission = null)
@@ -158,7 +160,7 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
 
         private void BuildSkyAndDistantCity()
         {
-            CreateSphere("Blood Moon", new Vector3(10.4f, 8.5f, 48f), new Vector3(4.8f, 4.8f, 1.1f), moonMaterial, false);
+            CreateSphere("Blood Moon", new Vector3(9.2f, 8.1f, 48f), new Vector3(5.6f, 5.6f, 1.1f), moonMaterial, false);
 
             Transform skyline = NewGroup("Distant Skyline");
             for (int i = 0; i < 12; i++)
@@ -207,7 +209,7 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             Transform bridge = NewGroup("Main Combat Bridge");
 
             CreateCube("Main Stone Deck", new Vector3(0f, -2.35f, 0f), new Vector3(39f, 1.15f, 5.8f), stone, true, bridge);
-            CreateCube("Wet Surface", new Vector3(0f, -1.72f, -0.25f), new Vector3(39f, 0.12f, 5.2f), blackMetal, false, bridge);
+            CreateCube("Wet Surface", new Vector3(0f, -1.72f, -0.25f), new Vector3(39f, 0.12f, 5.2f), blackMetal, false, bridge);\n\n            // Thin emissive strips fake long rain reflections in the blockout.\n            for (int i = 0; i < 13; i++)\n            {\n                float x = -17f + i * 2.8f;\n                CreateCube("Wet Crimson Reflection", new Vector3(x, -1.63f, -1.1f), new Vector3(0.10f, 0.035f, 2.8f), emissiveRed, false, bridge);\n            }
 
             CreateCube("Lower Canal", new Vector3(0f, -7.4f, 5f), new Vector3(45f, 0.18f, 9f), waterMaterial, false, bridge);
 
@@ -279,6 +281,47 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             {
                 CreateCube("Kurohane Banner", new Vector3(x, 2.6f, 0.2f), new Vector3(1.5f, 4.2f, 0.1f), crimson, false, dressing);
                 CreateCube("Banner Spine", new Vector3(x, 4.8f, 0.15f), new Vector3(1.9f, 0.12f, 0.15f), blackMetal, false, dressing);
+            }
+        }
+
+        private void BuildCrimsonGardens()
+        {
+            Transform gardens = NewGroup("Crimson Gardens");
+
+            float[] treeX = { -16.5f, -10.8f, 11.4f, 16.2f };
+            foreach (float x in treeX)
+            {
+                float z = x < 0f ? 5.2f : 6.5f;
+                CreateCube("Crimson Tree Trunk", new Vector3(x, 0.3f, z), new Vector3(0.45f, 5.5f, 0.45f), darkWood, false, gardens);
+
+                for (int i = 0; i < 9; i++)
+                {
+                    Vector3 crown = new Vector3(
+                        x + Random.Range(-2.2f, 2.2f),
+                        3.1f + Random.Range(-1.1f, 1.6f),
+                        z + Random.Range(-0.8f, 0.8f));
+
+                    CreateSphere("Crimson Foliage", crown, new Vector3(
+                        Random.Range(1.3f, 2.5f),
+                        Random.Range(0.8f, 1.6f),
+                        Random.Range(0.7f, 1.3f)), crimson, false, gardens);
+                }
+            }
+        }
+
+        private void BuildAtmosphericDepth()
+        {
+            Transform atmosphere = NewGroup("Atmospheric Depth");
+
+            // Large translucent-looking dark forms are used as foreground framing
+            // until final VFX and authored parallax art replace this blockout.
+            CreateCube("Foreground Left Frame", new Vector3(-20.5f, 1.5f, -7.5f), new Vector3(5.5f, 17f, 2f), silhouette, false, atmosphere);
+            CreateCube("Foreground Right Frame", new Vector3(20.5f, 2f, -7.5f), new Vector3(5f, 18f, 2f), silhouette, false, atmosphere);
+
+            for (int i = 0; i < 8; i++)
+            {
+                float x = -15f + i * 4.5f;
+                CreateCube("Distant Crimson Beacon", new Vector3(x, Random.Range(0f, 6f), 24f), new Vector3(0.08f, Random.Range(1.5f, 4f), 0.08f), emissiveRed, false, atmosphere);
             }
         }
 
