@@ -61,8 +61,9 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             BuildCrimsonGardens();
             BuildAtmosphericDepth();
             BuildRain();
-            BuildPrototypeSpawn();
-            BuildHeroFocusLight();
+            AkioPrototypeController player = BuildPrototypeSpawn();
+            BuildTrainingDummy(player);
+            BuildHeroFocusLight(player.transform);
 
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.ExponentialSquared;
@@ -390,25 +391,106 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             renderer.material = CreateMaterial("Rain", new Color(0.45f, 0.12f, 0.12f, 0.7f), 0f, 0f);
         }
 
-        private void BuildPrototypeSpawn()
+        private AkioPrototypeController BuildPrototypeSpawn()
         {
-            Transform spawn = NewGroup("Akio Prototype Spawn");
+            Transform spawn = NewGroup("Akio Gameplay Prototype");
+            Vector3 spawnPosition = new(-7.2f, -1.59f, -0.8f);
 
-            GameObject body = CreateCapsule("Akio Blockout", new Vector3(-7.2f, -0.55f, -0.8f), new Vector3(0.65f, 1.25f, 0.65f), stone, false, spawn);
-            body.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            GameObject playerObject = new("Akio Prototype Player");
+            playerObject.transform.SetParent(spawn, false);
+            playerObject.transform.position = spawnPosition;
 
-            CreateCube("Kasa", new Vector3(-7.2f, 0.95f, -0.8f), new Vector3(1.5f, 0.12f, 1.2f), blackMetal, false, spawn);
-            GameObject blade = CreateCube("Prototype Katana", new Vector3(-6.3f, -0.15f, -0.95f), new Vector3(1.5f, 0.07f, 0.08f), emissiveRed, false, spawn);
+            Rigidbody rigidbody = playerObject.AddComponent<Rigidbody>();
+            rigidbody.mass = 72f;
+
+            CapsuleCollider playerCollider = playerObject.AddComponent<CapsuleCollider>();
+            playerCollider.radius = 0.42f;
+            playerCollider.height = 2.35f;
+            playerCollider.center = new Vector3(0f, 1.175f, 0f);
+
+            GameObject visualsObject = new("Visuals");
+            visualsObject.transform.SetParent(playerObject.transform, false);
+            Transform visuals = visualsObject.transform;
+
+            GameObject body = CreateCapsule(
+                "Akio Blockout",
+                spawnPosition + new Vector3(0f, 1.15f, 0f),
+                new Vector3(0.65f, 1.15f, 0.65f),
+                stone,
+                false,
+                visuals);
+            body.transform.rotation = Quaternion.identity;
+
+            CreateCube(
+                "Kasa",
+                spawnPosition + new Vector3(0f, 2.45f, 0f),
+                new Vector3(1.5f, 0.12f, 1.2f),
+                blackMetal,
+                false,
+                visuals);
+
+            GameObject blade = CreateCube(
+                "Prototype Katana",
+                spawnPosition + new Vector3(0.88f, 1.02f, -0.10f),
+                new Vector3(1.65f, 0.07f, 0.08f),
+                emissiveRed,
+                false,
+                visuals);
             blade.transform.rotation = Quaternion.Euler(0f, 0f, -18f);
+
+            AkioPrototypeController controller = playerObject.AddComponent<AkioPrototypeController>();
+            controller.Initialize(visuals, spawnPosition);
+            return controller;
         }
 
-        private void BuildHeroFocusLight()
+        private void BuildTrainingDummy(AkioPrototypeController player)
         {
-            Transform heroLighting = NewGroup("Hero Focus Light");
+            Transform arena = NewGroup("Prototype Combat Training");
+            Vector3 position = new(4.2f, -1.59f, -0.8f);
 
+            GameObject dummy = new("Training Samurai");
+            dummy.transform.SetParent(arena, false);
+            dummy.transform.position = position;
+
+            CapsuleCollider dummyCollider = dummy.AddComponent<CapsuleCollider>();
+            dummyCollider.radius = 0.46f;
+            dummyCollider.height = 2.4f;
+            dummyCollider.center = new Vector3(0f, 1.2f, 0f);
+
+            CreateCapsule(
+                "Training Samurai Body",
+                position + new Vector3(0f, 1.18f, 0f),
+                new Vector3(0.70f, 1.16f, 0.70f),
+                crimson,
+                false,
+                dummy.transform);
+
+            CreateCube(
+                "Training Samurai Kasa",
+                position + new Vector3(0f, 2.48f, 0f),
+                new Vector3(1.35f, 0.10f, 1.05f),
+                blackMetal,
+                false,
+                dummy.transform);
+
+            GameObject trainingBlade = CreateCube(
+                "Training Blade",
+                position + new Vector3(-0.78f, 1.02f, -0.08f),
+                new Vector3(1.3f, 0.07f, 0.08f),
+                darkWood,
+                false,
+                dummy.transform);
+            trainingBlade.transform.rotation = Quaternion.Euler(0f, 0f, 16f);
+
+            PrototypeCombatTarget target = dummy.AddComponent<PrototypeCombatTarget>();
+            target.Initialize(player);
+        }
+
+        private void BuildHeroFocusLight(Transform target)
+        {
             GameObject lightObject = new("Akio Focus Light");
-            lightObject.transform.SetParent(heroLighting, false);
-            lightObject.transform.position = new Vector3(-6.8f, 1.4f, -1.6f);
+            lightObject.transform.SetParent(target, false);
+            lightObject.transform.localPosition = new Vector3(0.35f, 1.8f, -1.0f);
 
             Light light = lightObject.AddComponent<Light>();
             light.type = LightType.Point;
