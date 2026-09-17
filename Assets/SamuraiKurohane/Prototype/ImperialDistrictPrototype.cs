@@ -56,6 +56,7 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             BuildMainCombatBridge();
             BuildSideArchitecture();
             BuildLanternNetwork();
+            BuildGameplayReadabilityLights();
             BuildToriiAndBanners();
             BuildCrimsonGardens();
             BuildAtmosphericDepth();
@@ -64,8 +65,8 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
 
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.ExponentialSquared;
-            RenderSettings.fogDensity = 0.006f;
-            RenderSettings.fogColor = new Color(0.11f, 0.018f, 0.025f);
+            RenderSettings.fogDensity = 0.0038f;
+            RenderSettings.fogColor = new Color(0.16f, 0.03f, 0.04f);
         }
 
         private void ConfigureScene()
@@ -77,7 +78,7 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
                 camera.orthographicSize = 8.7f;
                 camera.transform.position = new Vector3(0f, 2.2f, -28f);
                 camera.transform.rotation = Quaternion.identity;
-                camera.backgroundColor = new Color(0.055f, 0.012f, 0.018f);
+                camera.backgroundColor = new Color(0.095f, 0.02f, 0.03f);
                 camera.clearFlags = CameraClearFlags.SolidColor;
                 camera.nearClipPlane = 0.1f;
                 camera.farClipPlane = 160f;
@@ -88,21 +89,21 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             if (directional != null && directional.type == LightType.Directional)
             {
                 directional.color = new Color(0.62f, 0.15f, 0.12f);
-                directional.intensity = 1.85f;
+                directional.intensity = 2.2f;
                 directional.transform.rotation = Quaternion.Euler(42f, -28f, 0f);
                 directional.shadows = LightShadows.Soft;
             }
 
             RenderSettings.ambientMode = AmbientMode.Flat;
-            RenderSettings.ambientLight = new Color(0.16f, 0.035f, 0.045f);
+            RenderSettings.ambientLight = new Color(0.28f, 0.07f, 0.08f);
         }
 
         private void CreateMaterials()
         {
-            stone = CreateMaterial("Stone", new Color(0.11f, 0.095f, 0.10f), 0.15f, 0.72f);
-            blackMetal = CreateMaterial("Black Metal", new Color(0.055f, 0.05f, 0.055f), 0.72f, 0.70f);
-            darkWood = CreateMaterial("Dark Wood", new Color(0.095f, 0.025f, 0.025f), 0.08f, 0.50f);
-            roof = CreateMaterial("Roof", new Color(0.065f, 0.055f, 0.06f), 0.38f, 0.66f);
+            stone = CreateMaterial("Stone", new Color(0.18f, 0.15f, 0.16f), 0.12f, 0.78f);
+            blackMetal = CreateMaterial("Black Metal", new Color(0.10f, 0.09f, 0.10f), 0.70f, 0.82f);
+            darkWood = CreateMaterial("Dark Wood", new Color(0.13f, 0.04f, 0.04f), 0.08f, 0.56f);
+            roof = CreateMaterial("Roof", new Color(0.09f, 0.08f, 0.09f), 0.34f, 0.74f);
             crimson = CreateMaterial("Kurohane Crimson", new Color(0.38f, 0.012f, 0.018f), 0.22f, 0.34f);
             emissiveRed = CreateMaterial("Neon Crimson", new Color(0.42f, 0.01f, 0.012f), 0.18f, 0.2f,
                 new Color(5.2f, 0.035f, 0.025f));
@@ -112,7 +113,7 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
                 new Color(2.7f, 0.02f, 0.03f));
             waterMaterial = CreateMaterial("Canal", new Color(0.025f, 0.012f, 0.017f), 0.66f, 0.12f,
                 new Color(0.28f, 0.006f, 0.008f));
-            silhouette = CreateMaterial("Distant Silhouette", new Color(0.035f, 0.018f, 0.022f), 0f, 0.55f);
+            silhouette = CreateMaterial("Distant Silhouette", new Color(0.07f, 0.03f, 0.04f), 0f, 0.40f);
         }
 
         private Material CreateMaterial(string name, Color color, float metallic, float smoothness, Color? emission = null)
@@ -269,11 +270,32 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             float[] positions = { -16f, -11.5f, -6.8f, -2.2f, 2.6f, 7.4f, 12f, 15.5f };
             foreach (float x in positions)
             {
-                BuildLantern(lanterns, new Vector3(x, -0.5f, -1.8f), x > -3f && x < 10f);
+                BuildLantern(lanterns, new Vector3(x, -0.5f, -1.8f), true);
             }
 
             BuildLantern(lanterns, new Vector3(-15.5f, 4.2f, 0.2f), true);
             BuildLantern(lanterns, new Vector3(13.2f, 3.2f, 3.5f), true);
+        }
+
+        private void BuildGameplayReadabilityLights()
+        {
+            Transform lighting = NewGroup("Gameplay Readability Lights");
+
+            float[] positions = { -14f, -8f, -2f, 4f, 10f, 16f };
+
+            foreach (float x in positions)
+            {
+                GameObject lightObject = new("Gameplay Fill Light");
+                lightObject.transform.SetParent(lighting, false);
+                lightObject.transform.position = new Vector3(x, 1.2f, -1.5f);
+
+                Light light = lightObject.AddComponent<Light>();
+                light.type = LightType.Point;
+                light.range = 8f;
+                light.intensity = 2.2f;
+                light.color = new Color(1f, 0.32f, 0.10f);
+                light.shadows = LightShadows.None;
+            }
         }
 
         private void BuildToriiAndBanners()
@@ -322,8 +344,8 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
 
             // Large translucent-looking dark forms are used as foreground framing
             // until final VFX and authored parallax art replace this blockout.
-            CreateCube("Foreground Left Frame", new Vector3(-20.5f, 1.5f, -7.5f), new Vector3(5.5f, 17f, 2f), silhouette, false, atmosphere);
-            CreateCube("Foreground Right Frame", new Vector3(20.5f, 2f, -7.5f), new Vector3(5f, 18f, 2f), silhouette, false, atmosphere);
+            CreateCube("Foreground Left Frame", new Vector3(-22.5f, 1.5f, -7.5f), new Vector3(3.5f, 17f, 2f), silhouette, false, atmosphere);
+            CreateCube("Foreground Right Frame", new Vector3(22.5f, 2f, -7.5f), new Vector3(3.2f, 18f, 2f), silhouette, false, atmosphere);
 
             for (int i = 0; i < 8; i++)
             {
