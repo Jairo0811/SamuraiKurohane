@@ -28,6 +28,13 @@ $BuildLog = Join-Path $ProjectPath "Builds\Windows\windows-build.log"
 $BuildDirectory = Split-Path $BuildLog -Parent
 New-Item -ItemType Directory -Path $BuildDirectory -Force | Out-Null
 
+$OpenProjectUnity = Get-CimInstance Win32_Process -Filter "Name='Unity.exe'" -ErrorAction SilentlyContinue |
+    Where-Object { $_.CommandLine -and $_.CommandLine -like "*$ProjectPath*" }
+
+if ($OpenProjectUnity) {
+    throw "This Unity project appears to be open in the Editor. Close Unity completely for SamuraiKurohane, then run this script again."
+}
+
 Write-Host "Building Samurai Kurohane Prototype..."
 Write-Host "Unity: $UnityPath"
 Write-Host "Project: $ProjectPath"
@@ -43,7 +50,17 @@ if ($LASTEXITCODE -ne 0) {
 $ExePath = Join-Path $ProjectPath "Builds\Windows\SamuraiKurohanePrototype\SamuraiKurohanePrototype.exe"
 
 if (-not (Test-Path $ExePath)) {
-    throw "Unity exited successfully, but the expected EXE was not found: $ExePath"
+    Write-Host ""
+    Write-Host "Unity exited without producing the expected EXE."
+    Write-Host "Expected: $ExePath"
+    Write-Host "Build log: $BuildLog"
+    if (Test-Path $BuildLog) {
+        Write-Host ""
+        Write-Host "Last 80 lines of the Unity build log:"
+        Get-Content $BuildLog -Tail 80
+    }
+
+    throw "Windows prototype build did not produce the expected EXE."
 }
 
 Write-Host ""
