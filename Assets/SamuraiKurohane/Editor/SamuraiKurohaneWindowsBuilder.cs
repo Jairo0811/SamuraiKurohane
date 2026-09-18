@@ -22,7 +22,8 @@ namespace JMGameStudios.SamuraiKurohane.Editor
                     $"Required prototype scene was not found: {ScenePath}");
             }
 
-            string outputPath = Path.GetFullPath(OutputRelativePath);
+            string projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
+            string outputPath = Path.GetFullPath(Path.Combine(projectRoot, OutputRelativePath));
             string outputDirectory = Path.GetDirectoryName(outputPath);
 
             if (string.IsNullOrWhiteSpace(outputDirectory))
