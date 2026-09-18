@@ -77,6 +77,28 @@ The runtime gameplay scripts are:
 - `PrototypeCombatTarget.cs`
 - `ImperialDistrictPrototype.cs`
 
+## Windows EXE build
+
+The prototype includes a Windows x64 build command.
+
+With Unity open, use:
+
+`JM Game Studios > Build > Windows Prototype (.exe)`
+
+The build is generated at:
+
+`Builds/Windows/SamuraiKurohanePrototype/SamuraiKurohanePrototype.exe`
+
+Alternatively, close Unity and run from PowerShell at the repository root:
+
+`./Build-Windows.ps1`
+
+The script targets Unity `6000.6.1f1` and writes the Unity batch-build log to:
+
+`Builds/Windows/windows-build.log`
+
+The build uses `ImperialDistrict_Prototype.unity` explicitly, so the old template SampleScene in Build Settings is not used for this prototype executable.
+
 ## Next milestone
 
 After the prototype is validated in Play Mode:
