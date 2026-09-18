@@ -2,334 +2,474 @@
 
 # ⚔️ SAMURAI KUROHANE
 
-### A 2.5D samurai-futurist action metroidvania by **JM Game Studios**
+### Metroidvania de acción 2.5D samurái-futurista de **JM Game Studios**
 
 ![Unity](https://img.shields.io/badge/Unity-6000.6.1f1-000000?logo=unity&logoColor=white)
 ![URP](https://img.shields.io/badge/URP-17.6.0-222222?logo=unity&logoColor=white)
 ![CSharp](https://img.shields.io/badge/C%23-Gameplay-512BD4?logo=csharp&logoColor=white)
-![Platform](https://img.shields.io/badge/Current%20Target-Windows-0078D4?logo=windows&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Prototype-E53935)
-![Studio](https://img.shields.io/badge/JM%20Game%20Studios-Original%20IP-7C3AED)
+![Windows](https://img.shields.io/badge/Plataforma%20actual-Windows-0078D4?logo=windows&logoColor=white)
+![Status](https://img.shields.io/badge/Estado-Prototipo-E53935)
+![Studio](https://img.shields.io/badge/JM%20Game%20Studios-IP%20Original-7C3AED)
 
-**Tradition. Steel. Legacy.**
+**Tradición. Acero. Legado.**
 
 </div>
 
 ---
 
-## 📖 About the project
+## 📖 Sobre el proyecto
 
-**Samurai Kurohane** is an original videogame project in development at **JM Game Studios**.
+**Samurai Kurohane** es una propiedad intelectual original en desarrollo bajo **JM Game Studios**.
 
-The project is being designed as a **2.5D action metroidvania** with a dark, cinematic, samurai-futurist identity. Its world combines the visual language of Japanese warrior culture with futuristic architecture, technology, crimson energy, rain-soaked districts, monumental temples and hostile territories built around exploration, precision combat and progression.
+El proyecto está concebido como un **metroidvania de acción 2.5D** con una identidad samurái-futurista oscura, cinematográfica y tecnológica. Su mundo combina influencias visuales del Japón feudal con arquitectura futurista, energía carmesí, lluvia, distritos imperiales, templos monumentales y sistemas de combate centrados en precisión, lectura del enemigo y dominio de la espada.
 
-The current protagonist is **Akio Kurohane**, heir to the legacy of the vanished **Kurohane Clan**.
+El protagonista es **Akio Kurohane**, heredero de un clan desaparecido cuyo legado define buena parte de la identidad narrativa y jugable del proyecto.
 
-The project is currently in the **prototype / pre-production stage**. Systems, narrative details, visuals, balance and content shown in the repository are subject to change as the game evolves.
+Actualmente el juego se encuentra en una etapa de **prototipo / preproducción**. Los sistemas, valores de balance, arte, narrativa y estructura del mundo todavía pueden cambiar durante la evolución del proyecto.
 
-> **Samurai Kurohane is not intended to imitate an existing game.**  
-> Its goal is to establish an original identity, world, characters, combat language and intellectual property for JM Game Studios.
+> **Samurai Kurohane no busca copiar videojuegos existentes.**  
+> El objetivo es desarrollar una IP propia con identidad, personajes, mundo, combate y dirección artística originales.
 
 ---
 
 ## 🥷 Akio Kurohane
 
-Akio is the playable protagonist of **Samurai Kurohane**.
+Akio Kurohane es el protagonista jugable.
 
-He is envisioned as a disciplined, agile and precise swordsman carrying the legacy of a clan that has disappeared from the world. His design combines traditional samurai influences with a darker futuristic silhouette:
+Su diseño mezcla disciplina samurái, tecnología y una estética oscura y elegante.
 
-- wide **kasa**
-- black and charcoal armor
-- layered cloth and weathered cloak
-- crimson clan iconography
-- technologically enhanced katana
-- restrained red energy accents
-- elegant rather than excessively bulky armor
-- strong silhouette for side-view gameplay
+### Rasgos visuales principales
 
-Akio's gameplay philosophy is built around one principle:
+- kasa amplio
+- armadura negra y carbón
+- placas metálicas oscuras
+- cuero y telas envejecidas
+- detalles carmesí
+- capa larga y deteriorada
+- iconografía del Clan Kurohane
+- katana con energía roja controlada
+- silueta clara para gameplay lateral
 
-> **Akio does not win through brute force. He wins through discipline, timing and precision.**
+La filosofía jugable de Akio se resume en:
 
----
-
-## 🌑 World & atmosphere
-
-The current visual direction establishes a world built around:
-
-- futuristic Japanese districts
-- monumental imperial architecture
-- pagodas and fortress silhouettes
-- torii gates
-- blackened metal and dark wood
-- crimson banners
-- blood-red moonlight
-- rain
-- wet reflective surfaces
-- canals and layered city depth
-- atmospheric fog
-- cinematic contrast between black, charcoal and crimson
-
-The first prototype environment is the **Imperial District**, currently used to test:
-
-- composition
-- traversal scale
-- combat readability
-- camera framing
-- lighting
-- environmental depth
-- player silhouette
-- visual hierarchy
+> **Akio no gana por fuerza bruta; gana por disciplina, timing y precisión.**
 
 ---
 
-## 🎮 Gameplay direction
+## 🌑 Mundo y atmósfera
 
-**Genre:** Action Metroidvania  
-**Perspective:** 2.5D side view  
-**Combat focus:** Precision, timing, posture pressure and sword mastery  
-**Exploration:** Ability-gated progression and interconnected environments  
-**Tone:** Dark, cinematic, technological and samurai-inspired
+La dirección visual actual se apoya en:
 
-### Core gameplay pillars
+- distritos japoneses futuristas
+- palacios imperiales
+- fortalezas y pagodas
+- torii
+- canales
+- lluvia constante
+- superficies mojadas
+- reflejos rojos
+- niebla
+- luna carmesí
+- metal ennegrecido
+- madera oscura
+- jardines rojos
+- iluminación cinematográfica
+- profundidad por capas
 
-| Pillar | Direction |
+El primer escenario prototipado es el **Imperial District**.
+
+---
+
+## 🏯 Imperial District
+
+El **Imperial District** es el primer entorno de prueba importante del proyecto.
+
+Actualmente permite validar:
+
+- escala
+- composición
+- lectura visual
+- desplazamiento lateral
+- combate
+- iluminación
+- cámara
+- siluetas
+- profundidad ambiental
+- contraste entre personaje y entorno
+- identidad samurái-futurista
+
+El prototipo utiliza geometría básica y materiales generados en runtime para acelerar iteraciones antes de crear assets definitivos.
+
+---
+
+## 🎮 Género y jugabilidad
+
+**Género:** Metroidvania de acción  
+**Perspectiva:** 2.5D lateral  
+**Combate:** técnico, rápido y deliberado  
+**Exploración:** rutas interconectadas y progresión por habilidades  
+**Tono:** oscuro, serio, tecnológico y cinematográfico
+
+### Pilares jugables
+
+| Pilar | Dirección |
 |---|---|
-| ⚔️ Sword Combat | Fast but deliberate katana combat |
-| 🛡️ Defense | Guard, posture management and timing-based parry |
-| 💨 Mobility | Responsive running, jumping and dash movement |
-| 🧭 Exploration | Metroidvania traversal and ability-gated paths |
-| 🩸 Progression | Combat techniques, movement abilities and clan arts |
-| 🌧️ Atmosphere | Cinematic environments with strong visual identity |
-| 👺 Encounters | Enemy patterns designed around reading and counterplay |
+| ⚔️ Combate | Katana, combos, ataques pesados y contraataques |
+| 🛡️ Defensa | Guardia, postura y parry |
+| 💨 Movilidad | Correr, salto, dash y habilidades futuras |
+| 🧭 Exploración | Estructura metroidvania y rutas bloqueadas por habilidades |
+| 🩸 Progresión | Técnicas, movilidad y artes del clan |
+| 🌧️ Atmósfera | Presentación visual fuerte y cinematográfica |
+| 👺 Enemigos | Patrones legibles, castigo y ventanas de oportunidad |
 
 ---
 
-## ⚔️ Current prototype combat
+## ⚔️ Combate actual del prototipo
 
-The active gameplay prototype is focused on validating Akio's core combat feel before final characters and animations are produced.
+El prototipo jugable ya incluye:
 
-### Implemented / prototyped
-
-- player movement
-- jump
+- movimiento lateral
+- salto
 - dash
-- brief dash evasion window
-- three-hit light attack combo
-- heavy attack
-- guard
-- timing-based parry
-- health
-- posture
-- guard break
-- defeat and respawn loop
-- attack hit detection
-- prototype enemy combat target
-- enemy attack telegraph
-- enemy health and posture
-- enemy posture break
-- enemy defeat and respawn
-- runtime prototype HUD
+- pequeña ventana de evasión durante el dash
+- combo ligero de 3 golpes
+- ataque pesado
+- guardia
+- parry basado en timing
+- vida
+- postura
+- ruptura de guardia
+- derrota y respawn
+- detección de golpes
+- enemigo de entrenamiento
+- telegraph de ataque enemigo
+- vida y postura enemiga
+- posture break enemigo
+- respawn del enemigo
+- HUD de depuración
 
-### Prototype controls
+---
 
-#### Keyboard & mouse
+## 🎮 Controles del prototipo
 
-| Action | Input |
+### Teclado y mouse
+
+| Acción | Control |
 |---|---|
-| Move | **A / D** or **Left / Right** |
-| Jump | **Space** |
-| Dash | **Left Shift** |
-| Light Attack | **J** / Left Mouse |
-| Heavy Attack | **K** / Right Mouse |
+| Movimiento | **A / D** o Flechas izquierda/derecha |
+| Salto | **Espacio** |
+| Dash | **Shift izquierdo** |
+| Ataque ligero | **J** / clic izquierdo |
+| Ataque pesado | **K** / clic derecho |
 | Parry | **Q** |
-| Guard | **L** |
+| Guardia | **L** |
 
-#### Gamepad
+### Gamepad
 
-| Action | Input |
+| Acción | Control |
 |---|---|
-| Move | Left Stick |
-| Jump | South Button |
-| Dash | East Button |
-| Light Attack | West Button |
-| Heavy Attack | North Button |
-| Parry | Left Shoulder |
-| Guard | Left Trigger |
+| Movimiento | Stick izquierdo |
+| Salto | Botón Sur |
+| Dash | Botón Este |
+| Ataque ligero | Botón Oeste |
+| Ataque pesado | Botón Norte |
+| Parry | Shoulder izquierdo |
+| Guardia | Trigger izquierdo |
 
-> Control mapping is still considered **prototype configuration** and may change.
-
----
-
-## 🧠 Combat philosophy
-
-The combat system is being designed around **intentional decisions instead of button mashing**.
-
-A skilled Akio player should be able to:
-
-1. read an enemy attack;
-2. position correctly;
-3. use dash deliberately;
-4. defend or parry at the correct moment;
-5. pressure enemy posture;
-6. punish an opening;
-7. break posture;
-8. execute a decisive counterattack.
-
-The planned combat language includes techniques such as:
-
-### Kirisame
-A rapid offensive sword technique intended for short-range pressure and fast punishment.
-
-### Tsukiyomi
-A mobility-oriented technique envisioned as an advanced phantom-like displacement that can support both combat and traversal.
-
-### Kurenai
-A powerful crimson sword technique designed around burst damage and high posture damage.
-
-These systems are part of the design direction and may evolve during prototyping.
+> Estos controles todavía pertenecen a la fase de prototipo y pueden cambiar.
 
 ---
 
-## 📊 Posture system
+## 🧠 Filosofía del combate
 
-Both Akio and enemies are being designed around a **Posture** mechanic.
+La intención es evitar un sistema basado únicamente en presionar botones rápidamente.
+
+El combate de Akio debe recompensar:
+
+1. observar;
+2. medir distancia;
+3. leer ataques;
+4. reposicionarse;
+5. usar dash con intención;
+6. defender;
+7. hacer parry;
+8. castigar;
+9. romper postura;
+10. ejecutar un contraataque decisivo.
+
+---
+
+## 🩸 Sistema de postura
+
+Tanto Akio como los enemigos utilizan un sistema de **Posture**.
 
 ### Akio
 
-Blocking reduces incoming health damage but damages posture.
+Bloquear reduce el daño directo a la vida, pero consume postura.
 
-If posture reaches zero:
+Cuando la postura llega a cero:
 
-- Akio suffers a **Guard Break**;
-- movement and defense are temporarily compromised;
-- the enemy gains a punish window.
+- ocurre un **Guard Break**;
+- Akio queda vulnerable temporalmente;
+- el enemigo obtiene una ventana para castigarlo.
 
-### Enemies
+### Enemigos
 
-Attacks, heavy strikes and successful parries damage enemy posture.
+Los ataques, golpes fuertes y parries reducen postura enemiga.
 
-When enemy posture is broken:
+Cuando la postura enemiga se rompe:
 
-- the enemy becomes vulnerable;
-- Akio gains a high-value offensive window;
-- future iterations may trigger finishers or executions.
+- el enemigo queda expuesto;
+- Akio obtiene una ventana ofensiva;
+- futuras versiones podrán activar finishers o ejecuciones.
 
 ---
 
-## 🗺️ Metroidvania progression
+## 🔥 Técnicas planeadas
 
-The long-term progression model is planned around abilities that affect both **combat and traversal**.
+### Kirisame
 
-Potential progression directions include:
+Técnica ofensiva rápida basada en múltiples cortes cortos y presión cercana.
 
-- double jump
+### Tsukiyomi
+
+Técnica de movilidad avanzada basada en desplazamiento veloz y reposicionamiento.
+
+### Kurenai
+
+Técnica carmesí de alto impacto, diseñada para infligir gran daño y daño de postura.
+
+Estas técnicas todavía están sujetas a iteración.
+
+---
+
+## 🗺️ Progresión metroidvania
+
+El sistema de progresión futuro puede incluir:
+
+- doble salto
 - air dash
+- wall jump
 - wall traversal
-- advanced parry techniques
+- parry mejorado
 - counter slash
-- charged iai attacks
-- clan techniques
-- environmental seals
-- hidden paths
-- Kurohane relic interactions
-- movement abilities that open previously inaccessible areas
+- iai cargado
+- técnicas del clan
+- ruptura de sellos
+- interacción con reliquias Kurohane
+- accesos ocultos
+- rutas bloqueadas por habilidades
 
-The final progression tree has **not yet been locked**.
-
----
-
-## 🎨 Art direction
-
-**Samurai Kurohane** follows the visual direction of JM Game Studios:
-
-- modern
-- AAA-inspired
-- technological
-- minimalist where appropriate
-- cinematic
-- professional
-- dark and mature
-- non-cartoon presentation
-
-### Core palette
-
-| Role | Color direction |
-|---|---|
-| Primary Darkness | Black / Charcoal |
-| Energy / Clan | Crimson Red |
-| Materials | Dark Steel / Leather / Wood |
-| Secondary FX | Controlled warm orange |
-| UI / Contrast | White / Neutral light values |
-
-The visual language should preserve gameplay readability even inside dark environments.
+La estructura definitiva de progresión todavía no está cerrada.
 
 ---
 
-## 🏯 Imperial District prototype
+# 🛠️ Stack tecnológico actual
 
-The first major environment prototype is the **Imperial District**.
+Este es el stack que **ya forma parte del proyecto** o está directamente integrado en el repositorio.
 
-It currently explores:
-
-- 2.5D combat lane
-- blood moon
-- distant pagoda skyline
-- elevated imperial palace
-- bridge traversal
-- canals
-- torii structures
-- Kurohane banners
-- lantern networks
-- crimson gardens
-- atmospheric rain
-- wet-surface reflections
-- layered foreground and background depth
-- player readability lighting
-
-The prototype is intentionally **geometry-first**. Unity primitives and runtime-generated materials are being used to validate gameplay and composition before replacing them with authored production assets.
-
----
-
-## 🛠️ Technology stack
-
-The repository currently uses:
-
-| Technology | Version / Role |
+| Tecnología | Versión / Uso |
 |---|---|
 | **Unity** | 6000.6.1f1 |
-| **Universal Render Pipeline** | 17.6.0 |
-| **C#** | Gameplay and tools |
+| **C#** | Gameplay, lógica, sistemas y herramientas |
+| **Universal Render Pipeline (URP)** | 17.6.0 |
 | **Unity Input System** | 1.20.0 |
-| **AI Navigation** | 2.0.14 |
-| **Timeline** | 6.6.0 |
-| **Visual Scripting** | 1.9.12 |
+| **Unity AI Navigation** | 2.0.14 |
+| **Unity Timeline** | 6.6.0 |
+| **Unity Visual Scripting** | 1.9.12 |
 | **Unity Test Framework** | 1.8.0 |
-| **Git / GitHub** | Version control |
-| **Visual Studio / Rider** | Development environment |
-
-Future production may also incorporate tools such as:
-
-- Blender
-- Substance 3D Painter
-- FMOD or Wwise
-- dedicated VFX workflows
-- authored animation pipelines
-
-No external production dependency should be considered final until it is formally adopted by the project.
+| **Unity UI / UGUI** | UI y soporte de interfaz |
+| **Git** | Control de versiones |
+| **GitHub** | Repositorio, ramas, commits y pull requests |
+| **Windows x64** | Plataforma principal del prototipo actual |
 
 ---
 
-## 🧱 Project architecture
+# 💻 Programas y herramientas de desarrollo
 
-The repository currently follows standard Unity project organization.
+## Herramientas usadas actualmente
+
+### 🎮 Unity 6
+
+Motor principal del proyecto.
+
+Se utiliza para:
+
+- gameplay
+- escenas
+- físicas
+- iluminación
+- materiales
+- partículas
+- input
+- cámara
+- prototipos
+- builds
+- testing
+
+### 💻 Visual Studio / JetBrains Rider
+
+Entornos de desarrollo para trabajar con:
+
+- C#
+- scripts de gameplay
+- herramientas internas
+- depuración
+- arquitectura del proyecto
+
+El repositorio incluye soporte para ambos mediante los paquetes oficiales de Unity.
+
+### 🐙 GitHub
+
+Se utiliza para:
+
+- control de versiones
+- ramas de desarrollo
+- historial de commits
+- pull requests
+- revisión de cambios
+- respaldo remoto
+- evolución del proyecto
+
+### 🔧 Git
+
+Base del flujo de trabajo de control de versiones.
+
+---
+
+## Herramientas previstas para producción
+
+Estas herramientas forman parte de la dirección técnica prevista de **JM Game Studios**, pero no todas están integradas todavía en el prototipo actual.
+
+### 🧊 Blender
+
+Previsto para:
+
+- modelado 3D
+- blockouts avanzados
+- escenarios
+- props
+- personajes
+- armas
+- UVs
+- rigging auxiliar
+- exportación hacia Unity
+
+### 🎨 Substance 3D Painter
+
+Previsto para:
+
+- texturizado PBR
+- materiales de armadura
+- metal
+- cuero
+- madera
+- desgaste
+- suciedad
+- superficies mojadas
+
+### 🔊 FMOD
+
+Posible middleware de audio para:
+
+- música adaptativa
+- sonido dinámico
+- eventos de combate
+- ambientación
+- mezcla avanzada
+
+### 🔊 Wwise
+
+Alternativa posible a FMOD para:
+
+- implementación de audio
+- estados dinámicos
+- música
+- efectos
+- integración profesional de sonido
+
+> **FMOD y Wwise son alternativas de evaluación.**  
+> No se plantea utilizar ambos simultáneamente como requisito del proyecto.
+
+### 🎬 Herramientas futuras de animación y cinemática
+
+Dependiendo de la producción, el proyecto podrá incorporar herramientas adicionales para:
+
+- captura de movimiento
+- animación
+- edición de cinemáticas
+- VFX
+- composición
+- audio
+- producción de trailers
+
+---
+
+## 🧩 Paquetes Unity actuales
+
+El proyecto incluye actualmente:
+
+```text
+com.unity.ai.navigation        2.0.14
+com.unity.inputsystem          1.20.0
+com.unity.render-pipelines.universal 17.6.0
+com.unity.test-framework       1.8.0
+com.unity.timeline             6.6.0
+com.unity.ugui                 2.6.0
+com.unity.visualscripting      1.9.12
+```
+
+Además del soporte estándar de Unity para:
+
+- físicas 3D
+- físicas 2D
+- partículas
+- animación
+- audio
+- UI
+- shaders
+- navegación
+- vídeo
+- XR
+
+---
+
+## 🎨 Dirección artística
+
+La identidad visual de **Samurai Kurohane** sigue la dirección general de **JM Game Studios**:
+
+- moderna
+- tecnológica
+- minimalista
+- cinematográfica
+- seria
+- profesional
+- inspirada en estándares AAA
+- sin estética infantil ni caricaturesca
+
+### Paleta principal
+
+| Función | Color |
+|---|---|
+| Base | Negro |
+| Material oscuro | Carbón |
+| Clan / Energía | Carmesí |
+| Metal | Acero oscuro |
+| Contraste | Blanco |
+| Iluminación secundaria | Naranja cálido controlado |
+
+---
+
+## 🧱 Estructura del proyecto
 
 ```text
 SamuraiKurohane/
 ├── Assets/
 │   ├── Scenes/
 │   ├── Settings/
-│   ├── SamuraiKurohane/          # Project-specific gameplay/prototype content
+│   ├── SamuraiKurohane/
+│   │   ├── Prototype/
+│   │   └── Editor/
 │   └── InputSystem_Actions.inputactions
 │
 ├── Packages/
@@ -338,22 +478,27 @@ SamuraiKurohane/
 │
 ├── ProjectSettings/
 │
-├── Build-Windows.ps1             # Prototype Windows build helper
+├── Build-Windows.ps1
 ├── .gitignore
 └── README.md
 ```
 
-### Prototype branch
+---
 
-The active gameplay/environment work is currently developed in:
+## 🌿 Ramas del repositorio
 
-```text
-feature/imperial-district-prototype
-```
+Actualmente el repositorio utiliza:
 
-with its integration tracked in **Pull Request #1**.
+| Rama | Uso |
+|---|---|
+| `main` | Base estable del proyecto |
+| `feature/imperial-district-prototype` | Entorno Imperial District + gameplay de Akio |
 
-Important prototype files include:
+El desarrollo activo del prototipo se mantiene separado de `main` hasta completar su validación.
+
+---
+
+## 📁 Archivos principales del prototipo
 
 ```text
 Assets/SamuraiKurohane/Prototype/
@@ -363,7 +508,7 @@ Assets/SamuraiKurohane/Prototype/
 └── README.md
 ```
 
-and the prototype scene:
+Escena principal del prototipo:
 
 ```text
 Assets/Scenes/ImperialDistrict_Prototype.unity
@@ -371,58 +516,52 @@ Assets/Scenes/ImperialDistrict_Prototype.unity
 
 ---
 
-## 🚀 Getting started
+## 🚀 Cómo abrir el proyecto
 
-### Requirements
+### Requisitos
 
 - Unity Hub
-- **Unity 6000.6.1f1**
+- Unity **6000.6.1f1**
 - Git
-- Windows is currently the primary development target
+- Windows para el prototipo actual
 
-### Clone
+### Clonar
 
 ```bash
 git clone https://github.com/Jairo0811/SamuraiKurohane.git
 cd SamuraiKurohane
 ```
 
-For the current prototype:
+Para trabajar con el prototipo actual:
 
 ```bash
 git checkout feature/imperial-district-prototype
 ```
 
-Then open the repository folder through **Unity Hub**.
-
-Allow Unity to restore packages before entering Play Mode.
+Luego abrir la carpeta desde **Unity Hub**.
 
 ---
 
-## ▶️ Running the prototype
+## ▶️ Ejecutar el prototipo
 
-On the prototype branch:
-
-1. Open Unity.
-2. Open:
+1. Abrir Unity.
+2. Abrir:
 
 ```text
 Assets/Scenes/ImperialDistrict_Prototype.unity
 ```
 
-3. Wait for compilation/import to finish.
-4. Press **Play**.
-5. The environment, Akio prototype and Training Samurai are generated at runtime.
+3. Esperar a que termine la compilación.
+4. Presionar **Play**.
+5. El entorno, Akio y el Training Samurai se generan en runtime.
 
 ---
 
-## 🪟 Windows prototype build
+## 🪟 Compilar para Windows
 
-The development branch contains a prototype Windows x64 build workflow.
+El proyecto contiene un flujo de build de prototipo para Windows x64.
 
-### From Unity
-
-Use:
+### Desde Unity
 
 ```text
 JM Game Studios
@@ -430,7 +569,7 @@ JM Game Studios
 → Windows Prototype (.exe)
 ```
 
-### Output
+### Salida esperada
 
 ```text
 Builds/
@@ -439,198 +578,194 @@ Builds/
         └── SamuraiKurohanePrototype.exe
 ```
 
-### PowerShell alternative
+### Alternativa PowerShell
 
 ```powershell
 .\Build-Windows.ps1
 ```
 
-The Windows Player pipeline is still being validated during the prototype stage, including URP shader inclusion and build configuration.
+La pipeline de Windows todavía se encuentra en fase de validación, especialmente en lo referente a configuración URP, shaders y empaquetado del Player.
 
 ---
 
-## 🌿 Branch strategy
+## 🗓️ Roadmap
 
-Current branches:
+### Base técnica
 
-| Branch | Purpose |
-|---|---|
-| `main` | Stable project baseline |
-| `feature/imperial-district-prototype` | Imperial District + Akio gameplay prototype |
+- [x] Proyecto Unity creado
+- [x] Unity 6 configurado
+- [x] URP
+- [x] Input System
+- [x] Git
+- [x] GitHub
 
-Feature development should remain isolated from `main` until the relevant prototype milestone is validated.
+### Imperial District
 
----
+- [x] blockout 2.5D
+- [x] puente de combate
+- [x] skyline
+- [x] palacio
+- [x] torii
+- [x] linternas
+- [x] lluvia
+- [x] jardines carmesí
+- [x] contraste de gameplay
 
-## 🗓️ Development roadmap
+### Akio Gameplay Prototype
 
-### Foundation
-
-- [x] Unity project created
-- [x] Universal Render Pipeline configured
-- [x] Input System available
-- [x] GitHub repository established
-
-### Prototype environment
-
-- [x] Imperial District blockout
-- [x] 2.5D presentation
-- [x] bridge combat lane
-- [x] palace / skyline composition
-- [x] torii and lantern language
-- [x] rain atmosphere
-- [x] crimson lighting/readability passes
-
-### Akio gameplay prototype
-
-- [x] movement
-- [x] jump
+- [x] movimiento
+- [x] salto
 - [x] dash
-- [x] light combo
-- [x] heavy attack
-- [x] guard
+- [x] combo ligero
+- [x] ataque pesado
+- [x] guardia
 - [x] parry
-- [x] health
-- [x] posture
-- [x] training combat target
-- [ ] final character model
-- [ ] production animation set
-- [ ] animation-driven hitboxes
-- [ ] polished hit-stop and combat VFX
+- [x] vida
+- [x] postura
+- [x] enemigo de entrenamiento
+- [ ] modelo 3D final de Akio
+- [ ] animaciones finales
+- [ ] hitboxes sincronizadas por animación
+- [ ] hit-stop pulido
+- [ ] VFX de combate
 - [ ] Kurenai
 - [ ] Tsukiyomi
 - [ ] Kirisame
 
-### Vertical slice
+### Vertical Slice
 
-- [ ] authored Imperial District environment assets
-- [ ] first production enemy archetypes
-- [ ] final HUD direction
-- [ ] audio implementation
-- [ ] music direction
-- [ ] save/checkpoint system
-- [ ] progression prototype
-- [ ] first complete encounter
-- [ ] first boss prototype
-- [ ] vertical-slice polish pass
+- [ ] assets definitivos del Imperial District
+- [ ] primer enemigo de producción
+- [ ] HUD final
+- [ ] audio
+- [ ] música
+- [ ] checkpoints
+- [ ] guardado
+- [ ] progresión
+- [ ] primer encuentro completo
+- [ ] primer boss
+- [ ] polish pass
 
 ---
 
-## 🧪 Prototype philosophy
+## 🧪 Filosofía de prototipado
 
-The repository deliberately prioritizes **mechanics and readability before production art**.
-
-The current workflow is:
+El proyecto prioriza primero:
 
 ```mermaid
 flowchart LR
-    A[Concept & Game Design] --> B[Prototype]
-    B --> C[Gameplay Validation]
-    C --> D[Iteration]
+    A[Concepto] --> B[Prototipo]
+    B --> C[Prueba jugable]
+    C --> D[Iteración]
     D --> E[Vertical Slice]
-    E --> F[Production]
+    E --> F[Producción]
 ```
 
-A mechanic should prove that it is enjoyable and readable before significant production resources are committed to it.
+La idea es validar si una mecánica funciona y se siente bien antes de invertir tiempo en arte final.
 
 ---
 
-## 🤖 Use of AI
+## 🤖 Uso de IA
 
-JM Game Studios may use AI-assisted tools as part of the creative, technical and production workflow.
+JM Game Studios utiliza la IA como **herramienta de apoyo creativo, técnico y productivo**.
 
-AI can support areas such as:
+Puede ayudar en:
 
 - brainstorming
-- design exploration
-- concept development
-- prototyping
-- programming assistance
-- documentation
-- UI exploration
+- documentación
+- concept art
 - storyboards
-- production planning
+- prototipos
+- programación asistida
+- UI
+- narrativa
+- planificación
+- materiales de presentación
 
-However:
+Sin embargo:
 
-> **Creative direction, canon, gameplay decisions, project scope, artistic identity and quality control remain under human direction.**
+> **La dirección creativa, el canon, la jugabilidad, el alcance, la identidad artística y el control de calidad permanecen bajo criterio humano.**
 
-The project should not be presented as a game “made by AI”. AI is treated as a support tool, not as a substitute for authorship or creative direction.
-
----
-
-## 🎮 About JM Game Studios
-
-**JM Game Studios** is an independent game-development brand focused on building original intellectual properties, immersive worlds, strong gameplay systems and cinematic presentation.
-
-The studio's long-term direction is to create original games with:
-
-- distinctive identities
-- strong narrative foundations
-- responsive gameplay
-- professional production standards
-- ambitious worlds scaled responsibly for independent development
-
-**Samurai Kurohane** is one of the original IPs being developed under this vision.
+El proyecto no debe presentarse como un videojuego “hecho por IA”.
 
 ---
 
-## 👤 Project direction
+## 🎮 Sobre JM Game Studios
 
-**Creator / Project Direction:** Jairo Matías  
-**Studio:** JM Game Studios
+**JM Game Studios** es un estudio independiente en desarrollo enfocado en:
 
-The project is being developed incrementally from prototype toward a future vertical slice.
+- videojuegos originales
+- nuevas propiedades intelectuales
+- mundos inmersivos
+- narrativa
+- gameplay
+- diseño de personajes
+- experiencias de alta calidad
+- acabados profesionales inspirados en estándares AAA
 
----
-
-## ⚠️ Development status
-
-This repository contains **work in progress**.
-
-Expect:
-
-- placeholder geometry
-- debug UI
-- temporary values
-- incomplete systems
-- prototype-only code
-- changing combat balance
-- unfinished visual assets
-- experimental build tooling
-
-Nothing in the current prototype should be interpreted as final production quality or final game content.
+Samurai Kurohane forma parte de esta visión.
 
 ---
 
-## 📜 Intellectual property & licensing
+## 👤 Dirección del proyecto
 
-**Samurai Kurohane**, its original characters, world concepts, terminology, visual identity and associated JM Game Studios material are part of an original project under development.
-
-This repository currently does **not** include an open-source license.
-
-Unless an explicit license is added later, the source code, game concepts and project assets should **not** be assumed to be licensed for redistribution, commercial reuse, derivative works or incorporation into other products.
-
-Third-party packages remain subject to their respective licenses and terms.
+**Creador / Dirección del proyecto:** Jairo Matías  
+**Estudio:** JM Game Studios
 
 ---
 
-## ⭐ Project goal
+## ⚠️ Estado actual
 
-The immediate objective is not to build the entire game at once.
+Este repositorio está en desarrollo.
 
-The next major target is:
+Actualmente puede contener:
 
-> **A polished vertical slice that demonstrates Akio, the combat identity, traversal, the Imperial District art direction and the quality bar of Samurai Kurohane.**
+- placeholders
+- geometría temporal
+- UI de debug
+- código experimental
+- valores de prueba
+- mecánicas incompletas
+- materiales temporales
+- herramientas de build en validación
+
+Nada de lo mostrado en esta etapa debe considerarse contenido final.
+
+---
+
+## 📜 Propiedad intelectual
+
+**Samurai Kurohane**, Akio Kurohane, el Clan Kurohane, sus conceptos originales, personajes, mundo, identidad visual y demás contenido original pertenecen al proyecto desarrollado bajo JM Game Studios.
+
+Actualmente el repositorio **no contiene una licencia open source**.
+
+Por tanto, salvo que se añada una licencia explícita posteriormente:
+
+- el código no debe asumirse como reutilizable libremente;
+- los assets no deben redistribuirse;
+- los conceptos no deben utilizarse comercialmente;
+- no se autoriza la creación de trabajos derivados basándose en este repositorio.
+
+Las dependencias y paquetes de terceros mantienen sus propias licencias.
+
+---
+
+## ⭐ Objetivo principal
+
+El objetivo inmediato no es construir el juego completo de una sola vez.
+
+La meta actual es:
+
+> **Crear un vertical slice pulido que demuestre a Akio, el combate, la exploración, el Imperial District y el nivel de calidad visual y jugable que quiere alcanzar Samurai Kurohane.**
 
 ---
 
 <div align="center">
 
-### ⚔️ SAMURAI KUROHANE
+# ⚔️ SAMURAI KUROHANE
 
-**An original JM Game Studios project**
+### Una propiedad intelectual original de JM Game Studios
 
-*Built one system, one encounter and one world layer at a time.*
+**Construyendo el juego sistema por sistema, encuentro por encuentro y mundo por mundo.**
 
 </div>
