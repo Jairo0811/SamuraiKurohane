@@ -4,12 +4,29 @@
 
 ### Metroidvania de acción 2.5D samurái-futurista de **JM Game Studios**
 
-![Unity](https://img.shields.io/badge/Unity-6000.6.1f1-000000?logo=unity&logoColor=white)
-![URP](https://img.shields.io/badge/URP-17.6.0-222222?logo=unity&logoColor=white)
-![CSharp](https://img.shields.io/badge/C%23-Gameplay-512BD4?logo=csharp&logoColor=white)
-![Windows](https://img.shields.io/badge/Plataforma%20actual-Windows-0078D4?logo=windows&logoColor=white)
-![Status](https://img.shields.io/badge/Estado-Prototipo-E53935)
-![Studio](https://img.shields.io/badge/JM%20Game%20Studios-IP%20Original-7C3AED)
+<p align="center">
+  <img src="https://img.shields.io/badge/JM%20Game%20Studios-IP%20Original-7C3AED?style=for-the-badge" alt="JM Game Studios · IP Original" />
+  <img src="https://img.shields.io/badge/Estado-Prototipo%20%2F%20Preproducción-E53935?style=for-the-badge" alt="Estado: Prototipo / Preproducción" />
+  <img src="https://img.shields.io/badge/Versión-0.1.0-2563EB?style=for-the-badge" alt="Versión 0.1.0" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Unity-6000.6.1f1-000000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity 6000.6.1f1" />
+  <img src="https://img.shields.io/badge/C%23-Gameplay-512BD4?style=for-the-badge&logo=csharp&logoColor=white" alt="C# Gameplay" />
+  <img src="https://img.shields.io/badge/URP-17.6.0-222222?style=for-the-badge&logo=unity&logoColor=white" alt="URP 17.6.0" />
+  <img src="https://img.shields.io/badge/Input%20System-1.20.0-2563EB?style=for-the-badge&logo=unity&logoColor=white" alt="Unity Input System 1.20.0" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Plataforma-Windows%20x64-0078D4?style=for-the-badge&logo=windows11&logoColor=white" alt="Windows x64" />
+  <img src="https://img.shields.io/badge/Perspectiva-2.5D-B91C1C?style=for-the-badge" alt="2.5D" />
+  <img src="https://img.shields.io/badge/Género-Action%20Metroidvania-991B1B?style=for-the-badge" alt="Action Metroidvania" />
+  <img src="https://img.shields.io/badge/Arte-Samurái--Futurista-111827?style=for-the-badge" alt="Samurái futurista" />
+</p>
+
+<p align="center">
+  <strong>Unity · C# · URP · Input System · Git · GitHub · Visual Studio / Rider</strong>
+</p>
 
 **Tradición. Acero. Legado.**
 
@@ -268,6 +285,19 @@ La estructura definitiva de progresión todavía no está cerrada.
 
 Este es el stack que **ya forma parte del proyecto** o está directamente integrado en el repositorio.
 
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=unity,cs,git,github,visualstudio,rider" alt="Unity, C#, Git, GitHub, Visual Studio y Rider" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Unity-6000.6.1f1-000000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity 6000.6.1f1" />
+  <img src="https://img.shields.io/badge/URP-17.6.0-222222?style=for-the-badge&logo=unity&logoColor=white" alt="URP 17.6.0" />
+  <img src="https://img.shields.io/badge/C%23-Gameplay-512BD4?style=for-the-badge&logo=csharp&logoColor=white" alt="C# Gameplay" />
+  <img src="https://img.shields.io/badge/Input%20System-1.20.0-2563EB?style=for-the-badge&logo=unity&logoColor=white" alt="Input System 1.20.0" />
+  <img src="https://img.shields.io/badge/AI%20Navigation-2.0.14-0F766E?style=for-the-badge&logo=unity&logoColor=white" alt="AI Navigation 2.0.14" />
+  <img src="https://img.shields.io/badge/Timeline-6.6.0-7C3AED?style=for-the-badge&logo=unity&logoColor=white" alt="Timeline 6.6.0" />
+</p>
+
 | Tecnología | Versión / Uso |
 |---|---|
 | **Unity** | 6000.6.1f1 |
@@ -286,6 +316,14 @@ Este es el stack que **ya forma parte del proyecto** o está directamente integr
 ---
 
 # 💻 Programas y herramientas de desarrollo
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Unity-Engine-000000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity" />
+  <img src="https://img.shields.io/badge/Visual%20Studio-IDE-5C2D91?style=for-the-badge&logo=visualstudio&logoColor=white" alt="Visual Studio" />
+  <img src="https://img.shields.io/badge/JetBrains%20Rider-IDE-000000?style=for-the-badge&logo=rider&logoColor=white" alt="JetBrains Rider" />
+  <img src="https://img.shields.io/badge/Git-Control%20de%20versiones-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git" />
+  <img src="https://img.shields.io/badge/GitHub-Repositorio-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
+</p>
 
 ## Herramientas usadas actualmente
 
@@ -338,6 +376,13 @@ Base del flujo de trabajo de control de versiones.
 ---
 
 ## Herramientas previstas para producción
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Blender-Modelado%203D-E87D0D?style=for-the-badge&logo=blender&logoColor=white" alt="Blender" />
+  <img src="https://img.shields.io/badge/Substance%203D%20Painter-Texturizado-FF61F6?style=for-the-badge&logo=adobe&logoColor=white" alt="Substance 3D Painter" />
+  <img src="https://img.shields.io/badge/FMOD-Audio-000000?style=for-the-badge" alt="FMOD" />
+  <img src="https://img.shields.io/badge/Wwise-Audio-00549F?style=for-the-badge" alt="Wwise" />
+</p>
 
 Estas herramientas forman parte de la dirección técnica prevista de **JM Game Studios**, pero no todas están integradas todavía en el prototipo actual.
 
