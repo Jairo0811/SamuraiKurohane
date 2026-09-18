@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -138,7 +137,7 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
 
             if (shader == null)
             {
-                throw new InvalidOperationException(
+                throw new System.InvalidOperationException(
                     $"No compatible runtime shader is available for prototype material '{name}'.");
             }
 
