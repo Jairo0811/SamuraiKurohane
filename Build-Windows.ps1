@@ -39,12 +39,25 @@ Write-Host "Building Samurai Kurohane Prototype..."
 Write-Host "Unity: $UnityPath"
 Write-Host "Project: $ProjectPath"
 
-& $UnityPath -batchmode -quit -projectPath $ProjectPath -executeMethod JMGameStudios.SamuraiKurohane.Editor.SamuraiKurohaneWindowsBuilder.BuildWindowsPrototype -logFile $BuildLog
+$UnityArguments = @(
+    "-batchmode",
+    "-quit",
+    "-projectPath", "`"$ProjectPath`"",
+    "-executeMethod", "JMGameStudios.SamuraiKurohane.Editor.SamuraiKurohaneWindowsBuilder.BuildWindowsPrototype",
+    "-logFile", "`"$BuildLog`""
+)
 
-if ($LASTEXITCODE -ne 0) {
+$UnityProcess = Start-Process -FilePath $UnityPath -ArgumentList $UnityArguments -Wait -PassThru -NoNewWindow
+
+if ($UnityProcess.ExitCode -ne 0) {
     Write-Host ""
-    Write-Host "Unity build failed. Log: $BuildLog"
-    exit $LASTEXITCODE
+    Write-Host "Unity build failed with exit code $($UnityProcess.ExitCode). Log: $BuildLog"
+    if (Test-Path $BuildLog) {
+        Write-Host ""
+        Write-Host "Last 80 lines of the Unity build log:"
+        Get-Content $BuildLog -Tail 80
+    }
+    exit $UnityProcess.ExitCode
 }
 
 $ExePath = Join-Path $ProjectPath "Builds\Windows\SamuraiKurohanePrototype\SamuraiKurohanePrototype.exe"
