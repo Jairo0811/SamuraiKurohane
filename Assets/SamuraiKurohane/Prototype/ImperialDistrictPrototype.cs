@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -120,10 +121,25 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
 
         private Material CreateMaterial(string name, Color color, float metallic, float smoothness, Color? emission = null)
         {
-            Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+            // Prefer the shader referenced by the active render-pipeline asset.
+            // Shader.Find can succeed in the Editor but return null in a Player
+            // build when the shader was stripped because no asset referenced it.
+            Shader shader = GraphicsSettings.currentRenderPipeline?.defaultShader;
+
+            if (shader == null)
+            {
+                shader = Shader.Find("Universal Render Pipeline/Lit");
+            }
+
             if (shader == null)
             {
                 shader = Shader.Find("Standard");
+            }
+
+            if (shader == null)
+            {
+                throw new InvalidOperationException(
+                    $"No compatible runtime shader is available for prototype material '{name}'.");
             }
 
             Material material = new(shader) { name = name };
