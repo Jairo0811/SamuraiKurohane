@@ -5,31 +5,69 @@ using UnityEngine.Rendering;
 namespace JMGameStudios.SamuraiKurohane.Prototype
 {
     /// <summary>
-    /// Procedural environment blockout for the Imperial District prototype.
-    /// The goal is to establish Samurai Kurohane's 2.5D visual language before
-    /// committing to final modular environment art.
+    /// Procedural environment for the Imperial District prototype (core: orchestration, scene
+    /// configuration, materials and primitive helpers).
+    ///
+    /// Layout (world X): Outer Gate (-38..-20)  |  Canal Bridge (-20..20)  |  Palace Approach (20..38)
+    /// Depth layers (back to front): sky, far skyline, mid skyline, palace, canal backdrop,
+    /// gameplay lane (z = -0.8), foreground silhouettes. Layers scroll with parallax.
+    ///
+    /// Split across partial files:
+    ///   ImperialDistrictPrototype.cs              core / helpers
+    ///   ImperialDistrictPrototype.Architecture.cs buildings, bridge, platforms, props
+    ///   ImperialDistrictPrototype.Atmosphere.cs   sky, light, mist, rain
+    ///   ImperialDistrictPrototype.Characters.cs   Akio, enemies, camera and HUD wiring
     /// </summary>
-    public sealed class ImperialDistrictPrototype : MonoBehaviour
+    public sealed partial class ImperialDistrictPrototype : MonoBehaviour
     {
         private const string GeneratedRootName = "__ImperialDistrict_Generated";
+
+        // Gameplay lane and level metrics.
+        private const float LaneZ = -0.8f;
+        private const float DeckTop = -1.775f;
+        private const float HalfLength = 38f;
+        private const float CameraRange = 22f;
+        private const float HalfView = 21f;
+        private const float CameraBaseY = 2.2f;
+        private const float OrthoSize = 8.7f;
 
         [Header("Prototype")]
         [SerializeField] private int seed = 1108;
         [SerializeField] private bool buildOnAwake = true;
 
+        [Header("Atmosphere")]
+        [SerializeField] private bool rain = true;
+        [SerializeField] private bool petalsAndEmbers = true;
+
         private readonly List<Material> runtimeMaterials = new();
+        private readonly List<GameObject> cameraAttached = new();
+        private readonly MaterialPropertyBlock block = new();
 
         private Transform generatedRoot;
+        private Camera sceneCamera;
+        private bool shadowsEnabled = true;
+
+        // Lit materials.
         private Material stone;
+        private Material darkStone;
         private Material blackMetal;
         private Material darkWood;
         private Material roof;
         private Material crimson;
         private Material emissiveRed;
         private Material lanternGlow;
+        private Material warmWindow;
         private Material moonMaterial;
         private Material waterMaterial;
-        private Material silhouette;
+        private Material silhouetteNear;
+        private Material silhouetteMid;
+        private Material silhouetteFar;
+
+        // Transparent / unlit VFX materials.
+        private Material glowRed;
+        private Material glowAmber;
+        private Material glowDark;
+        private Material beamMaterial;
 
         private void Awake()
         {
@@ -51,19 +89,39 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             root.transform.SetParent(transform, false);
             generatedRoot = root.transform;
 
-            BuildSkyAndDistantCity();
+            // Background layers (no shadows, parallax).
+            shadowsEnabled = false;
+            BuildSkyAndMoon();
+            BuildSkylineLayers();
             BuildImperialPalace();
+            BuildCanalBackdrop();
+
+            // Gameplay world.
+            shadowsEnabled = true;
             BuildMainCombatBridge();
+            BuildLanePlatforms();
             BuildSideArchitecture();
+            BuildOuterGateZone();
+            BuildPalaceApproach();
             BuildLanternNetwork();
             BuildGameplayReadabilityLights();
             BuildToriiAndBanners();
             BuildCrimsonGardens();
-            BuildAtmosphericDepth();
-            BuildRain();
+            BuildLevelBounds();
+
+            // Atmosphere and foreground.
+            shadowsEnabled = false;
+            BuildMistAndLightShafts();
+            BuildForegroundLayer();
+            BuildWeather();
+            shadowsEnabled = true;
+
+            // Characters, camera, HUD.
             AkioPrototypeController player = BuildPrototypeSpawn();
-            BuildTrainingDummy(player);
+            BuildEnemies(player);
             BuildHeroFocusLight(player.transform);
+            BuildCameraRig(player);
+            BuildHud(player);
 
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.ExponentialSquared;
@@ -71,20 +129,24 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             RenderSettings.fogColor = new Color(0.19f, 0.04f, 0.05f);
         }
 
+        // ------------------------------------------------------------------
+        // Scene configuration
+        // ------------------------------------------------------------------
+
         private void ConfigureScene()
         {
-            Camera camera = Camera.main;
-            if (camera != null)
+            sceneCamera = Camera.main;
+            if (sceneCamera != null)
             {
-                camera.orthographic = true;
-                camera.orthographicSize = 8.7f;
-                camera.transform.position = new Vector3(0f, 2.2f, -28f);
-                camera.transform.rotation = Quaternion.identity;
-                camera.backgroundColor = new Color(0.095f, 0.02f, 0.03f);
-                camera.clearFlags = CameraClearFlags.SolidColor;
-                camera.nearClipPlane = 0.1f;
-                camera.farClipPlane = 160f;
-                camera.allowHDR = true;
+                sceneCamera.orthographic = true;
+                sceneCamera.orthographicSize = OrthoSize;
+                sceneCamera.transform.position = new Vector3(0f, CameraBaseY, -28f);
+                sceneCamera.transform.rotation = Quaternion.identity;
+                sceneCamera.backgroundColor = new Color(0.095f, 0.02f, 0.03f);
+                sceneCamera.clearFlags = CameraClearFlags.SolidColor;
+                sceneCamera.nearClipPlane = 0.1f;
+                sceneCamera.farClipPlane = 160f;
+                sceneCamera.allowHDR = true;
             }
 
             Light directional = FindFirstObjectByType<Light>();
@@ -102,501 +164,99 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
 
         private void CreateMaterials()
         {
-            stone = CreateMaterial("Stone", new Color(0.23f, 0.18f, 0.19f), 0.12f, 0.82f);
-            blackMetal = CreateMaterial("Black Metal", new Color(0.14f, 0.12f, 0.13f), 0.72f, 0.88f);
-            darkWood = CreateMaterial("Dark Wood", new Color(0.13f, 0.04f, 0.04f), 0.08f, 0.56f);
-            roof = CreateMaterial("Roof", new Color(0.09f, 0.08f, 0.09f), 0.34f, 0.74f);
-            crimson = CreateMaterial("Kurohane Crimson", new Color(0.38f, 0.012f, 0.018f), 0.22f, 0.34f);
-            emissiveRed = CreateMaterial("Neon Crimson", new Color(0.42f, 0.01f, 0.012f), 0.18f, 0.2f,
-                new Color(5.2f, 0.035f, 0.025f));
-            lanternGlow = CreateMaterial("Lantern Glow", new Color(1f, 0.20f, 0.025f), 0f, 0.12f,
-                new Color(6.5f, 0.6f, 0.05f));
-            moonMaterial = CreateMaterial("Blood Moon", new Color(0.55f, 0.02f, 0.025f), 0f, 0.1f,
-                new Color(2.7f, 0.02f, 0.03f));
-            waterMaterial = CreateMaterial("Canal", new Color(0.055f, 0.02f, 0.028f), 0.72f, 0.42f,
-                new Color(0.42f, 0.02f, 0.03f));
-            silhouette = CreateMaterial("Distant Silhouette", new Color(0.07f, 0.03f, 0.04f), 0f, 0.40f);
+            stone = Track(PrototypeMaterials.CreateLit("Stone", new Color(0.36f, 0.28f, 0.29f), 0.12f, 0.62f,
+                null, PrototypeMaterials.GetPattern(PrototypePattern.StoneBrick)));
+            darkStone = Track(PrototypeMaterials.CreateLit("Dark Stone", new Color(0.10f, 0.075f, 0.085f), 0.1f, 0.6f));
+            blackMetal = Track(PrototypeMaterials.CreateLit("Black Metal", new Color(0.14f, 0.12f, 0.13f), 0.72f, 0.88f));
+            darkWood = Track(PrototypeMaterials.CreateLit("Dark Wood", new Color(0.27f, 0.085f, 0.08f), 0.08f, 0.5f,
+                null, PrototypeMaterials.GetPattern(PrototypePattern.WoodPlanks)));
+            roof = Track(PrototypeMaterials.CreateLit("Roof", new Color(0.24f, 0.21f, 0.24f), 0.34f, 0.7f,
+                null, PrototypeMaterials.GetPattern(PrototypePattern.RoofTiles)));
+            crimson = Track(PrototypeMaterials.CreateLit("Kurohane Crimson", new Color(0.38f, 0.012f, 0.018f), 0.22f, 0.34f));
+            emissiveRed = Track(PrototypeMaterials.CreateLit("Neon Crimson", new Color(0.42f, 0.01f, 0.012f), 0.18f, 0.2f,
+                new Color(5.2f, 0.035f, 0.025f)));
+            lanternGlow = Track(PrototypeMaterials.CreateLit("Lantern Glow", new Color(1f, 0.20f, 0.025f), 0f, 0.12f,
+                new Color(6.5f, 0.6f, 0.05f)));
+            warmWindow = Track(PrototypeMaterials.CreateLit("Warm Window", new Color(1f, 0.45f, 0.12f), 0f, 0.1f,
+                new Color(3.4f, 1.0f, 0.18f)));
+            moonMaterial = Track(PrototypeMaterials.CreateLit("Blood Moon", new Color(0.55f, 0.02f, 0.025f), 0f, 0.1f,
+                new Color(2.7f, 0.02f, 0.03f)));
+            waterMaterial = Track(PrototypeMaterials.CreateLit("Canal", new Color(0.04f, 0.015f, 0.022f), 0.72f, 0.5f,
+                new Color(0.22f, 0.012f, 0.02f)));
+
+            // Atmospheric perspective: further layers are lighter and redder (the fog does not reach them).
+            silhouetteNear = Track(PrototypeMaterials.CreateLit("Silhouette Near", new Color(0.055f, 0.022f, 0.032f), 0f, 0.3f));
+            silhouetteMid = Track(PrototypeMaterials.CreateLit("Silhouette Mid", new Color(0.11f, 0.032f, 0.048f), 0f, 0.3f,
+                new Color(0.05f, 0.006f, 0.01f)));
+            silhouetteFar = Track(PrototypeMaterials.CreateLit("Silhouette Far", new Color(0.19f, 0.045f, 0.065f), 0f, 0.3f,
+                new Color(0.12f, 0.012f, 0.02f)));
+
+            glowRed = Track(PrototypeMaterials.CreateVfx("Glow Red", Color.white, true));
+            glowAmber = Track(PrototypeMaterials.CreateVfx("Glow Amber", Color.white, true));
+            glowDark = Track(PrototypeMaterials.CreateVfx("Glow Dark", Color.white, false));
+            beamMaterial = Track(PrototypeMaterials.CreateVfx("Light Beam", Color.white, true, PrototypeMaterials.SoftBeam));
         }
 
-        private Material CreateMaterial(string name, Color color, float metallic, float smoothness, Color? emission = null)
+        private Material Track(Material material)
         {
-            // Prefer the shader referenced by the active render-pipeline asset.
-            // Shader.Find can succeed in the Editor but return null in a Player
-            // build when the shader was stripped because no asset referenced it.
-            Shader shader = GraphicsSettings.currentRenderPipeline?.defaultShader;
-
-            if (shader == null)
-            {
-                shader = Shader.Find("Universal Render Pipeline/Lit");
-            }
-
-            if (shader == null)
-            {
-                shader = Shader.Find("Standard");
-            }
-
-            if (shader == null)
-            {
-                throw new System.InvalidOperationException(
-                    $"No compatible runtime shader is available for prototype material '{name}'.");
-            }
-
-            Material material = new(shader) { name = name };
-
-            if (material.HasProperty("_BaseColor"))
-            {
-                material.SetColor("_BaseColor", color);
-            }
-            else
-            {
-                material.color = color;
-            }
-
-            if (material.HasProperty("_Metallic"))
-            {
-                material.SetFloat("_Metallic", metallic);
-            }
-
-            if (material.HasProperty("_Smoothness"))
-            {
-                material.SetFloat("_Smoothness", smoothness);
-            }
-            else if (material.HasProperty("_Glossiness"))
-            {
-                material.SetFloat("_Glossiness", smoothness);
-            }
-
-            if (emission.HasValue && material.HasProperty("_EmissionColor"))
-            {
-                material.EnableKeyword("_EMISSION");
-                material.SetColor("_EmissionColor", emission.Value);
-            }
-
             runtimeMaterials.Add(material);
             return material;
         }
 
-        private void BuildSkyAndDistantCity()
-        {
-            CreateSphere("Blood Moon", new Vector3(9.2f, 8.1f, 48f), new Vector3(5.6f, 5.6f, 1.1f), moonMaterial, false);
-
-            Transform skyline = NewGroup("Distant Skyline");
-            for (int i = 0; i < 12; i++)
-            {
-                float x = -27f + i * 5.1f + Random.Range(-0.8f, 0.8f);
-                float h = Random.Range(3.5f, 8f);
-                BuildPagoda(skyline, x, -2f + h * 0.5f, h, Random.Range(3.5f, 6.5f), 31f + Random.Range(-3f, 5f), silhouette, false);
-            }
-
-            for (int i = 0; i < 6; i++)
-            {
-                float x = -20f + i * 8f;
-                CreateCube("Distant Tower", new Vector3(x, 2.8f, 36f), new Vector3(1.3f, 9f, 2.5f), silhouette, false);
-                CreateRoof(x, 7.25f, 3.3f, 2.8f, 36f, silhouette, false);
-            }
-        }
-
-        private void BuildImperialPalace()
-        {
-            Transform palace = NewGroup("Upper Imperial Palace");
-
-            CreateCube("Palace Terrace", new Vector3(5.5f, 1.3f, 15f), new Vector3(24f, 1.4f, 7f), stone, false);
-
-            for (int level = 0; level < 3; level++)
-            {
-                float width = 18f - level * 2.2f;
-                float y = 3.2f + level * 2.35f;
-                CreateCube($"Palace Floor {level + 1}", new Vector3(5.5f, y, 17f),
-                    new Vector3(width, 1.8f, 5f), darkWood, false, palace);
-                CreateRoof(5.5f, y + 1.05f, width + 2f, 6f, 17f, roof, false, palace);
-
-                int windows = Mathf.Max(4, Mathf.RoundToInt(width / 2f));
-                for (int i = 0; i < windows; i++)
-                {
-                    float t = windows == 1 ? 0f : i / (float)(windows - 1);
-                    float x = Mathf.Lerp(5.5f - width * 0.42f, 5.5f + width * 0.42f, t);
-                    CreateCube("Palace Window", new Vector3(x, y, 14.42f), new Vector3(0.55f, 0.8f, 0.08f), lanternGlow, false, palace);
-                }
-            }
-
-            CreateTorii(palace, 5.5f, 0.2f, 12f, 13.4f, false);
-        }
-
-        private void BuildMainCombatBridge()
-        {
-            Transform bridge = NewGroup("Main Combat Bridge");
-
-            CreateCube("Main Stone Deck", new Vector3(0f, -2.35f, 0f), new Vector3(39f, 1.15f, 5.8f), stone, true, bridge);
-            CreateCube("Wet Surface", new Vector3(0f, -1.72f, -0.25f), new Vector3(39f, 0.12f, 5.2f), blackMetal, false, bridge);
-            CreateCube("Bridge Readability Strip", new Vector3(0f, -1.60f, -1.35f), new Vector3(39f, 0.03f, 1.8f), emissiveRed, false, bridge);
-            CreateCube("Bridge Readability Strip Rear", new Vector3(0f, -1.60f, 1.15f), new Vector3(39f, 0.03f, 1.2f), emissiveRed, false, bridge);
-
-            // Thin emissive strips fake long rain reflections in the blockout.
-            for (int i = 0; i < 13; i++)
-            {
-                float x = -17f + i * 2.8f;
-                CreateCube("Wet Crimson Reflection", new Vector3(x, -1.63f, -1.1f), new Vector3(0.10f, 0.035f, 2.8f), emissiveRed, false, bridge);
-            }
-
-            CreateCube("Lower Canal", new Vector3(0f, -7.4f, 5f), new Vector3(45f, 0.18f, 9f), waterMaterial, false, bridge);
-
-            for (int i = 0; i < 18; i++)
-            {
-                float x = -18f + i * 2.15f;
-                CreateCube("Bridge Rail Post", new Vector3(x, -0.9f, 1.85f), new Vector3(0.16f, 1.65f, 0.16f), blackMetal, false, bridge);
-                CreateCube("Bridge Rail Post Rear", new Vector3(x, -0.9f, 2.2f), new Vector3(0.16f, 1.65f, 0.16f), blackMetal, false, bridge);
-            }
-
-            CreateCube("Bridge Rail", new Vector3(0f, -0.75f, 1.85f), new Vector3(38f, 0.13f, 0.13f), blackMetal, false, bridge);
-            CreateCube("Bridge Rail Rear", new Vector3(0f, -0.75f, 2.2f), new Vector3(38f, 0.13f, 0.13f), blackMetal, false, bridge);
-
-            CreateCube("Left Upper Platform", new Vector3(-14.4f, 2.6f, 1.5f), new Vector3(7.6f, 0.75f, 4.4f), stone, true, bridge);
-            CreateCube("Left Mid Platform", new Vector3(-12.8f, 0.45f, 1.3f), new Vector3(3.2f, 0.5f, 3.8f), stone, true, bridge);
-
-            for (int i = 0; i < 5; i++)
-            {
-                float x = 4.1f + i * 1.15f;
-                float y = -1.4f + i * 0.62f;
-                CreateCube("Upper Palace Step", new Vector3(x, y, 4.3f), new Vector3(1.3f, 0.42f, 4f), stone, true, bridge);
-            }
-        }
-
-        private void BuildSideArchitecture()
-        {
-            Transform architecture = NewGroup("Side Architecture");
-
-            BuildPagoda(architecture, -18f, 2f, 10f, 7f, 6f, darkWood, false);
-            BuildPagoda(architecture, 18.3f, 1.5f, 9f, 6.5f, 7f, darkWood, false);
-
-            CreateCube("Right Fortress Wall", new Vector3(18.2f, 0.5f, 2.2f), new Vector3(4.7f, 8f, 6.5f), darkWood, false, architecture);
-            CreateRoof(18.2f, 4.65f, 6.1f, 7f, 2.2f, roof, false, architecture);
-
-            CreateCube("Fortress Door", new Vector3(16.7f, -1.1f, -1.12f), new Vector3(2.5f, 4.3f, 0.18f), blackMetal, false, architecture);
-            CreateCube("Door Neon Seam", new Vector3(16.7f, -1.05f, -1.23f), new Vector3(0.11f, 3.6f, 0.06f), emissiveRed, false, architecture);
-
-            for (int i = 0; i < 5; i++)
-            {
-                float x = -17.2f;
-                float y = -1.25f + i * 1.25f;
-                CreateCube("Left Tower Slat", new Vector3(x, y, 2.35f), new Vector3(3.8f, 0.13f, 0.18f), crimson, false, architecture);
-            }
-        }
-
-        private void BuildLanternNetwork()
-        {
-            Transform lanterns = NewGroup("Lanterns");
-
-            float[] positions = { -16f, -11.5f, -6.8f, -2.2f, 2.6f, 7.4f, 12f, 15.5f };
-            foreach (float x in positions)
-            {
-                BuildLantern(lanterns, new Vector3(x, -0.5f, -1.8f), true);
-            }
-
-            BuildLantern(lanterns, new Vector3(-15.5f, 4.2f, 0.2f), true);
-            BuildLantern(lanterns, new Vector3(13.2f, 3.2f, 3.5f), true);
-        }
-
-        private void BuildGameplayReadabilityLights()
-        {
-            Transform lighting = NewGroup("Gameplay Readability Lights");
-
-            float[] positions = { -14f, -8f, -2f, 4f, 10f, 16f };
-
-            foreach (float x in positions)
-            {
-                GameObject lightObject = new("Gameplay Fill Light");
-                lightObject.transform.SetParent(lighting, false);
-                lightObject.transform.position = new Vector3(x, 1.35f, -1.2f);
-
-                Light light = lightObject.AddComponent<Light>();
-                light.type = LightType.Point;
-                light.range = 9f;
-                light.intensity = 3.0f;
-                light.color = new Color(1f, 0.34f, 0.12f);
-                light.shadows = LightShadows.None;
-            }
-        }
-
-        private void BuildToriiAndBanners()
-        {
-            Transform dressing = NewGroup("Torii and Clan Banners");
-
-            CreateTorii(dressing, -9.5f, 2.9f, 2f, 7.5f, false);
-            CreateTorii(dressing, 13.5f, 2.0f, 3.8f, 7.0f, false);
-
-            float[] bannerX = { -12.8f, -4.5f, 9.6f, 18f };
-            foreach (float x in bannerX)
-            {
-                CreateCube("Kurohane Banner", new Vector3(x, 2.6f, 0.2f), new Vector3(1.5f, 4.2f, 0.1f), crimson, false, dressing);
-                CreateCube("Banner Spine", new Vector3(x, 4.8f, 0.15f), new Vector3(1.9f, 0.12f, 0.15f), blackMetal, false, dressing);
-            }
-        }
-
-        private void BuildCrimsonGardens()
-        {
-            Transform gardens = NewGroup("Crimson Gardens");
-
-            float[] treeX = { -16.5f, -10.8f, 11.4f, 16.2f };
-            foreach (float x in treeX)
-            {
-                float z = x < 0f ? 5.2f : 6.5f;
-                CreateCube("Crimson Tree Trunk", new Vector3(x, 0.3f, z), new Vector3(0.45f, 5.5f, 0.45f), darkWood, false, gardens);
-
-                for (int i = 0; i < 9; i++)
-                {
-                    Vector3 crown = new Vector3(
-                        x + Random.Range(-2.2f, 2.2f),
-                        3.1f + Random.Range(-1.1f, 1.6f),
-                        z + Random.Range(-0.8f, 0.8f));
-
-                    CreateSphere("Crimson Foliage", crown, new Vector3(
-                        Random.Range(1.3f, 2.5f),
-                        Random.Range(0.8f, 1.6f),
-                        Random.Range(0.7f, 1.3f)), crimson, false, gardens);
-                }
-            }
-        }
-
-        private void BuildAtmosphericDepth()
-        {
-            Transform atmosphere = NewGroup("Atmospheric Depth");
-
-            // Large translucent-looking dark forms are used as foreground framing
-            // until final VFX and authored parallax art replace this blockout.
-            CreateCube("Foreground Left Frame", new Vector3(-22.5f, 1.5f, -7.5f), new Vector3(3.5f, 17f, 2f), silhouette, false, atmosphere);
-            CreateCube("Foreground Right Frame", new Vector3(22.5f, 2f, -7.5f), new Vector3(3.2f, 18f, 2f), silhouette, false, atmosphere);
-
-            for (int i = 0; i < 8; i++)
-            {
-                float x = -15f + i * 4.5f;
-                CreateCube("Distant Crimson Beacon", new Vector3(x, Random.Range(0f, 6f), 24f), new Vector3(0.08f, Random.Range(1.5f, 4f), 0.08f), emissiveRed, false, atmosphere);
-            }
-        }
-
-        private void BuildRain()
-        {
-            GameObject rainObject = new("Rain");
-            rainObject.transform.SetParent(generatedRoot, false);
-            rainObject.transform.position = new Vector3(0f, 10f, -4f);
-
-            ParticleSystem rain = rainObject.AddComponent<ParticleSystem>();
-
-            ParticleSystem.MainModule main = rain.main;
-            main.loop = true;
-            main.startLifetime = 2.4f;
-            main.startSpeed = 21f;
-            main.startSize = 0.035f;
-            main.maxParticles = 2200;
-            main.simulationSpace = ParticleSystemSimulationSpace.World;
-            main.gravityModifier = 0.2f;
-
-            ParticleSystem.EmissionModule emission = rain.emission;
-            emission.rateOverTime = 650f;
-
-            ParticleSystem.ShapeModule shape = rain.shape;
-            shape.shapeType = ParticleSystemShapeType.Box;
-            shape.scale = new Vector3(42f, 1f, 12f);
-
-            rainObject.transform.rotation = Quaternion.Euler(8f, 0f, 6f);
-
-            ParticleSystemRenderer renderer = rain.GetComponent<ParticleSystemRenderer>();
-            renderer.renderMode = ParticleSystemRenderMode.Stretch;
-            renderer.lengthScale = 5f;
-            renderer.velocityScale = 0.12f;
-            renderer.material = CreateMaterial("Rain", new Color(0.45f, 0.12f, 0.12f, 0.7f), 0f, 0f);
-        }
-
-        private AkioPrototypeController BuildPrototypeSpawn()
-        {
-            Transform spawn = NewGroup("Akio Gameplay Prototype");
-            Vector3 spawnPosition = new(-7.2f, -1.59f, -0.8f);
-
-            GameObject playerObject = new("Akio Prototype Player");
-            playerObject.transform.SetParent(spawn, false);
-            playerObject.transform.position = spawnPosition;
-
-            Rigidbody rigidbody = playerObject.AddComponent<Rigidbody>();
-            rigidbody.mass = 72f;
-
-            CapsuleCollider playerCollider = playerObject.AddComponent<CapsuleCollider>();
-            playerCollider.radius = 0.42f;
-            playerCollider.height = 2.35f;
-            playerCollider.center = new Vector3(0f, 1.175f, 0f);
-
-            GameObject visualsObject = new("Visuals");
-            visualsObject.transform.SetParent(playerObject.transform, false);
-            Transform visuals = visualsObject.transform;
-
-            GameObject body = CreateCapsule(
-                "Akio Blockout",
-                spawnPosition + new Vector3(0f, 1.15f, 0f),
-                new Vector3(0.65f, 1.15f, 0.65f),
-                stone,
-                false,
-                visuals);
-            body.transform.rotation = Quaternion.identity;
-
-            CreateCube(
-                "Kasa",
-                spawnPosition + new Vector3(0f, 2.45f, 0f),
-                new Vector3(1.5f, 0.12f, 1.2f),
-                blackMetal,
-                false,
-                visuals);
-
-            GameObject blade = CreateCube(
-                "Prototype Katana",
-                spawnPosition + new Vector3(0.88f, 1.02f, -0.10f),
-                new Vector3(1.65f, 0.07f, 0.08f),
-                emissiveRed,
-                false,
-                visuals);
-            blade.transform.rotation = Quaternion.Euler(0f, 0f, -18f);
-
-            AkioPrototypeController controller = playerObject.AddComponent<AkioPrototypeController>();
-            controller.Initialize(visuals, spawnPosition);
-            return controller;
-        }
-
-        private void BuildTrainingDummy(AkioPrototypeController player)
-        {
-            Transform arena = NewGroup("Prototype Combat Training");
-            Vector3 position = new(4.2f, -1.59f, -0.8f);
-
-            GameObject dummy = new("Training Samurai");
-            dummy.transform.SetParent(arena, false);
-            dummy.transform.position = position;
-
-            CapsuleCollider dummyCollider = dummy.AddComponent<CapsuleCollider>();
-            dummyCollider.radius = 0.46f;
-            dummyCollider.height = 2.4f;
-            dummyCollider.center = new Vector3(0f, 1.2f, 0f);
-
-            CreateCapsule(
-                "Training Samurai Body",
-                position + new Vector3(0f, 1.18f, 0f),
-                new Vector3(0.70f, 1.16f, 0.70f),
-                crimson,
-                false,
-                dummy.transform);
-
-            CreateCube(
-                "Training Samurai Kasa",
-                position + new Vector3(0f, 2.48f, 0f),
-                new Vector3(1.35f, 0.10f, 1.05f),
-                blackMetal,
-                false,
-                dummy.transform);
-
-            GameObject trainingBlade = CreateCube(
-                "Training Blade",
-                position + new Vector3(-0.78f, 1.02f, -0.08f),
-                new Vector3(1.3f, 0.07f, 0.08f),
-                darkWood,
-                false,
-                dummy.transform);
-            trainingBlade.transform.rotation = Quaternion.Euler(0f, 0f, 16f);
-
-            PrototypeCombatTarget target = dummy.AddComponent<PrototypeCombatTarget>();
-            target.Initialize(player);
-        }
-
-        private void BuildHeroFocusLight(Transform target)
-        {
-            GameObject lightObject = new("Akio Focus Light");
-            lightObject.transform.SetParent(target, false);
-            lightObject.transform.localPosition = new Vector3(0.35f, 1.8f, -1.0f);
-
-            Light light = lightObject.AddComponent<Light>();
-            light.type = LightType.Point;
-            light.range = 8.5f;
-            light.intensity = 3.4f;
-            light.color = new Color(1f, 0.30f, 0.10f);
-            light.shadows = LightShadows.None;
-        }
-
-        private void BuildPagoda(Transform parent, float x, float centerY, float height, float width, float z, Material material, bool collision)
-        {
-            int floors = Mathf.Clamp(Mathf.RoundToInt(height / 2.4f), 2, 4);
-            float floorHeight = height / floors;
-
-            for (int i = 0; i < floors; i++)
-            {
-                float taper = 1f - i * 0.12f;
-                float y = centerY - height * 0.5f + floorHeight * (i + 0.5f);
-                CreateCube("Pagoda Floor", new Vector3(x, y, z), new Vector3(width * taper, floorHeight * 0.82f, 3.4f), material, collision, parent);
-                CreateRoof(x, y + floorHeight * 0.46f, width * taper + 1.6f, 4f, z, roof ?? material, collision, parent);
-            }
-        }
-
-        private void CreateRoof(float x, float y, float width, float depth, float z, Material material, bool collision, Transform parent = null)
-        {
-            Transform targetParent = parent != null ? parent : generatedRoot;
-
-            CreateCube("Roof Main", new Vector3(x, y, z), new Vector3(width, 0.34f, depth), material, collision, targetParent);
-
-            GameObject left = CreateCube("Roof Eave L", new Vector3(x - width * 0.49f, y + 0.18f, z), new Vector3(1.15f, 0.25f, depth), material, collision, targetParent);
-            left.transform.rotation = Quaternion.Euler(0f, 0f, 12f);
-
-            GameObject right = CreateCube("Roof Eave R", new Vector3(x + width * 0.49f, y + 0.18f, z), new Vector3(1.15f, 0.25f, depth), material, collision, targetParent);
-            right.transform.rotation = Quaternion.Euler(0f, 0f, -12f);
-        }
-
-        private void CreateTorii(Transform parent, float x, float y, float z, float width, bool collision)
-        {
-            CreateCube("Torii Left Post", new Vector3(x - width * 0.38f, y, z), new Vector3(0.38f, 5.3f, 0.55f), darkWood, collision, parent);
-            CreateCube("Torii Right Post", new Vector3(x + width * 0.38f, y, z), new Vector3(0.38f, 5.3f, 0.55f), darkWood, collision, parent);
-            CreateCube("Torii Lower Beam", new Vector3(x, y + 1.65f, z), new Vector3(width * 0.9f, 0.38f, 0.7f), darkWood, collision, parent);
-            CreateCube("Torii Upper Beam", new Vector3(x, y + 2.35f, z), new Vector3(width * 1.08f, 0.46f, 0.78f), crimson, collision, parent);
-
-            CreateCube("Torii Neon L", new Vector3(x - width * 0.38f, y, z - 0.31f), new Vector3(0.06f, 4.7f, 0.05f), emissiveRed, false, parent);
-            CreateCube("Torii Neon R", new Vector3(x + width * 0.38f, y, z - 0.31f), new Vector3(0.06f, 4.7f, 0.05f), emissiveRed, false, parent);
-        }
-
-        private void BuildLantern(Transform parent, Vector3 position, bool withLight)
-        {
-            CreateCube("Lantern Post", position + new Vector3(0f, -1.2f, 0f), new Vector3(0.13f, 2.5f, 0.13f), blackMetal, false, parent);
-            CreateCube("Lantern Housing", position, new Vector3(0.65f, 0.95f, 0.65f), blackMetal, false, parent);
-            CreateCube("Lantern Core", position, new Vector3(0.42f, 0.68f, 0.42f), lanternGlow, false, parent);
-            CreateRoof(position.x, position.y + 0.58f, 0.95f, 0.95f, position.z, roof, false, parent);
-
-            if (withLight)
-            {
-                GameObject lightObject = new("Lantern Point Light");
-                lightObject.transform.SetParent(parent, false);
-                lightObject.transform.position = position + new Vector3(0f, 0.1f, -0.25f);
-                Light light = lightObject.AddComponent<Light>();
-                light.type = LightType.Point;
-                light.range = 7f;
-                light.intensity = 3.4f;
-                light.color = new Color(1f, 0.12f, 0.025f);
-                light.shadows = LightShadows.None;
-            }
-        }
-
-        private Transform NewGroup(string name)
+        // ------------------------------------------------------------------
+        // Layer + primitive helpers
+        // ------------------------------------------------------------------
+
+        private Transform NewGroup(string name, Transform parent = null)
         {
             GameObject group = new(name);
-            group.transform.SetParent(generatedRoot, false);
+            group.transform.SetParent(parent != null ? parent : generatedRoot, false);
             return group.transform;
         }
 
-        private GameObject CreateCube(string name, Vector3 position, Vector3 scale, Material material, bool collision, Transform parent = null)
+        /// <summary>
+        /// A parallax group. factor 0 = world locked, 1 = camera locked, negative = foreground.
+        /// Content is authored as if the camera were centred on x = 0.
+        /// </summary>
+        private Transform NewLayer(string name, float horizontalFactor, float verticalFactor)
         {
-            return CreatePrimitive(PrimitiveType.Cube, name, position, scale, material, collision, parent);
+            Transform layer = NewGroup(name);
+
+            if (sceneCamera != null)
+            {
+                PrototypeParallaxLayer parallax = layer.gameObject.AddComponent<PrototypeParallaxLayer>();
+                parallax.Configure(sceneCamera.transform, horizontalFactor, verticalFactor, 0f, CameraBaseY);
+            }
+
+            return layer;
         }
 
-        private GameObject CreateSphere(string name, Vector3 position, Vector3 scale, Material material, bool collision, Transform parent = null)
+        /// <summary>Half width a layer must cover so the screen never runs out of content.</summary>
+        private static float LayerHalfSpan(float factor)
         {
-            return CreatePrimitive(PrimitiveType.Sphere, name, position, scale, material, collision, parent);
+            return HalfView + (1f - factor) * CameraRange + 3f;
         }
 
-        private GameObject CreateCapsule(string name, Vector3 position, Vector3 scale, Material material, bool collision, Transform parent = null)
+        private GameObject CreateCube(string name, Vector3 position, Vector3 scale, Material material, bool collision,
+            Transform parent = null, float tile = 0f)
         {
-            return CreatePrimitive(PrimitiveType.Capsule, name, position, scale, material, collision, parent);
+            return CreatePrimitive(PrimitiveType.Cube, name, position, scale, material, collision, parent, tile);
         }
 
-        private GameObject CreatePrimitive(PrimitiveType type, string name, Vector3 position, Vector3 scale, Material material, bool collision, Transform parent)
+        private GameObject CreateSphere(string name, Vector3 position, Vector3 scale, Material material, bool collision,
+            Transform parent = null)
+        {
+            return CreatePrimitive(PrimitiveType.Sphere, name, position, scale, material, collision, parent, 0f);
+        }
+
+        private GameObject CreateCylinder(string name, Vector3 position, Vector3 scale, Material material, bool collision,
+            Transform parent = null)
+        {
+            return CreatePrimitive(PrimitiveType.Cylinder, name, position, scale, material, collision, parent, 0f);
+        }
+
+        private GameObject CreatePrimitive(PrimitiveType type, string name, Vector3 position, Vector3 scale, Material material,
+            bool collision, Transform parent, float tile)
         {
             GameObject go = GameObject.CreatePrimitive(type);
             go.name = name;
@@ -608,52 +268,104 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             if (renderer != null)
             {
                 renderer.sharedMaterial = material;
-                renderer.shadowCastingMode = ShadowCastingMode.On;
-                renderer.receiveShadows = true;
+                renderer.shadowCastingMode = shadowsEnabled ? ShadowCastingMode.On : ShadowCastingMode.Off;
+                renderer.receiveShadows = shadowsEnabled;
+
+                if (tile > 0f)
+                {
+                    // Texture repeats once per `tile` world units instead of stretching over the whole cube.
+                    renderer.GetPropertyBlock(block);
+                    block.SetVector("_BaseMap_ST", new Vector4(Mathf.Max(0.25f, scale.x / tile), Mathf.Max(0.25f, scale.y / tile), 0f, 0f));
+                    renderer.SetPropertyBlock(block);
+                }
             }
 
             Collider collider = go.GetComponent<Collider>();
-            if (collider != null)
+            if (collider != null && !collision)
             {
-                collider.enabled = collision;
+                DestroyObject(collider);
             }
 
             return go;
         }
+
+        /// <summary>Soft camera-facing glow card (halos, mist, clouds, light shafts).</summary>
+        private GameObject CreateGlow(string name, Vector3 position, Vector2 size, Material material, Color tint,
+            Transform parent, float zRotation = 0f)
+        {
+            GameObject go = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            go.name = name;
+            go.transform.SetParent(parent != null ? parent : generatedRoot, false);
+            go.transform.position = position;
+            go.transform.rotation = Quaternion.Euler(0f, 0f, zRotation);
+            go.transform.localScale = new Vector3(size.x, size.y, 1f);
+
+            Collider collider = go.GetComponent<Collider>();
+            if (collider != null)
+            {
+                DestroyObject(collider);
+            }
+
+            Renderer renderer = go.GetComponent<Renderer>();
+            renderer.sharedMaterial = material;
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+
+            renderer.GetPropertyBlock(block);
+            PrototypeMaterials.SetTint(block, tint);
+            renderer.SetPropertyBlock(block);
+            return go;
+        }
+
+        private static void AddDrift(GameObject go, float amplitude, float speed, float phase)
+        {
+            PrototypeDrift drift = go.AddComponent<PrototypeDrift>();
+            drift.Configure(amplitude, speed, phase);
+        }
+
+        // ------------------------------------------------------------------
+        // Cleanup
+        // ------------------------------------------------------------------
 
         private void ClearGenerated()
         {
             Transform old = transform.Find(GeneratedRootName);
             if (old != null)
             {
-                if (Application.isPlaying)
+                DestroyObject(old.gameObject);
+            }
+
+            foreach (GameObject attached in cameraAttached)
+            {
+                if (attached != null)
                 {
-                    Destroy(old.gameObject);
-                }
-                else
-                {
-                    DestroyImmediate(old.gameObject);
+                    DestroyObject(attached);
                 }
             }
 
+            cameraAttached.Clear();
+
             foreach (Material material in runtimeMaterials)
             {
-                if (material == null)
+                if (material != null)
                 {
-                    continue;
-                }
-
-                if (Application.isPlaying)
-                {
-                    Destroy(material);
-                }
-                else
-                {
-                    DestroyImmediate(material);
+                    DestroyObject(material);
                 }
             }
 
             runtimeMaterials.Clear();
+        }
+
+        private static void DestroyObject(Object target)
+        {
+            if (Application.isPlaying)
+            {
+                Destroy(target);
+            }
+            else
+            {
+                DestroyImmediate(target);
+            }
         }
     }
 }
