@@ -7,9 +7,10 @@
 
 > **Cómo leer este documento.** Todo lo marcado como *verificado* se comprobó leyendo
 > los archivos del repositorio o ejecutando una herramienta, y el método queda indicado.
-> Todo lo marcado como *no verificado* no se pudo comprobar en este entorno y no debe
-> darse por bueno. **El proyecto no se ha abierto ni ejecutado en el Editor de Unity
-> durante esta auditoría.**
+> Todo lo marcado como *no verificado* no se pudo comprobar y no debe darse por bueno.
+>
+> **Actualización del 2026-11-10:** el proyecto **sí se abrió y ejecutó** en el Editor de
+> Unity después de redactar la primera versión. Ver §5.4.
 
 ---
 
@@ -277,24 +278,31 @@ probado automáticamente. Es el primer habilitador de calidad del proyecto.
 son restos de la plantilla. Ocupan espacio, aparecen en búsquedas y confunden la estructura.
 Eliminarlos es barato ahora y molesto después.
 
-### 5.4 El prototipo no se ha verificado en el Editor
+### 5.4 El prototipo verificado en el Editor — RESUELTO el 2026-11-10
 
-**Limitación real de esta auditoría.** Los scripts se comprobaron sintácticamente con el
-compilador de Roslyn fuera de Unity (sin errores propios del proyecto; los únicos errores
-restantes son por los tipos de `UnityEngine` que no existen en ese entorno). Pero:
+**Actualización:** el prototipo se abrió, compiló y ejecutó en Unity 6000.6.1f1 sobre el
+equipo del director (`desktop-5qbhcjs`), con control remoto del Editor.
 
-- No se ha compilado dentro de Unity.
-- No se ha ejecutado Play Mode.
-- No existe ninguna captura ni grabación del juego funcionando.
-- El comportamiento visual del rig procedural, los materiales de partículas, la lluvia y el
-  post-procesado URP **no está confirmado**.
+**Resultado: compila sin un solo error y entra en Play Mode.** El HUD, los dos guardias
+etiquetados, la lluvia, el post-procesado URP y los rigs procedurales de Akio y de los
+guardias funcionan.
 
-Las API de URP usadas en `PrototypePostProcessing.cs` (`profile.Add<T>(true)`,
-`.Override(...)`, `TonemappingMode.ACES`) y la configuración de materiales transparentes de
-partículas son los puntos con más probabilidad de necesitar ajuste.
+Se encontraron y corrigieron **dos fallos reales** que el compilador no podía detectar:
 
-**Esto es el primer riesgo a cerrar**, porque toda la planificación posterior asume que el
-prototipo funciona.
+| Fallo | Síntoma | Corrección |
+|---|---|---|
+| `MaterialPropertyBlock` creado en un inicializador de campo de `MonoBehaviour` | `UnityException: CreateImpl is not allowed to be called from a MonoBehaviour constructor` al cargar la escena | Creación diferida en el primer uso |
+| Los tres ejes de `velocityOverLifetime` mezclaban modos de curva en lluvia y deriva ambiental | `Particle Velocity curves must all be in the same mode`, repetido cada frame (31.784 avisos acumulados) | Los tres ejes declaran el mismo modo |
+
+Verificación posterior a la corrección, sobre una ejecución limpia de Play Mode:
+**0 errores de compilación, 0 excepciones, 0 avisos de partículas.**
+
+**Hallazgo nuevo de dirección artística:** la imagen está saturada de rojo y naranja. Las
+ventanas emisivas, los halos de linterna, la niebla roja, la luz direccional carmesí y el
+bloom se suman hasta que el personaje compite con el fondo en lugar de destacar sobre él.
+Akio y los guardias se leen como siluetas, pero cuesta separarlos del entorno. Es el
+problema de legibilidad anticipado en `CHARACTER_BIBLE.md` §0.1, y es peor de lo previsto.
+**Corregirlo es ahora el trabajo de mayor impacto visual del proyecto** (tarea SK-042).
 
 ### 5.5 Pipeline de Blender no operativo
 

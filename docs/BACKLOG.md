@@ -12,14 +12,14 @@ Estimaciones en días-persona a jornada completa. Ver supuestos en [`ROADMAP.md`
 | ID | Trabajo | Est. | Depende de | Estado |
 |---|---|---|---|---|
 | SK-001 | **Autorizar y ejecutar la fusión de `feature/imperial-district-prototype` a `main`** con `--allow-unrelated-histories`, conservando `README.md` | 0,5 | **Decisión del director** | Pendiente |
-| SK-002 | Abrir el proyecto en Unity 6000.6.1f1, compilar y registrar todos los errores de consola | 0,5 | SK-001 | Pendiente |
-| SK-003 | Entrar en Play Mode y verificar: plataformas alcanzables, ángulos del rig, lluvia, partículas, post-procesado URP | 1 | SK-002 | Pendiente |
-| SK-004 | Capturar imagen y grabación corta del juego funcionando; adjuntarlas al repositorio | 0,5 | SK-003 | Pendiente |
-| SK-005 | Corregir lo que revelen SK-002 a SK-004 | 1–5 | SK-003 | Pendiente |
+| SK-002 | Abrir el proyecto en Unity 6000.6.1f1, compilar y registrar todos los errores de consola | 0,5 | SK-001 | **Hecho** 2026-11-10: 0 errores |
+| SK-003 | Entrar en Play Mode y verificar: plataformas alcanzables, ángulos del rig, lluvia, partículas, post-procesado URP | 1 | SK-002 | **Hecho** 2026-11-10: arranca limpio |
+| SK-004 | Capturar imagen y grabación corta del juego funcionando; adjuntarlas al repositorio | 0,5 | SK-003 | Captura hecha; grabación pendiente |
+| SK-005 | Corregir lo que revelen SK-002 a SK-004 | 1–5 | SK-003 | **Hecho** 2026-11-10: 2 fallos corregidos y verificados |
 | SK-006 | Decidir alcance objetivo: Opción A, B o C del roadmap | — | **Decisión del director** | Pendiente |
 
-> Hasta cerrar SK-002/003/004, **ninguna afirmación sobre el funcionamiento del prototipo
-> está verificada**. Todo el plan posterior asume que funciona.
+> **Cerrado el 2026-11-10.** El prototipo compila y ejecuta. Quedan SK-001 (fusión a
+> `main`, pendiente de autorización) y SK-006 (elección de alcance).
 
 ---
 
@@ -60,7 +60,7 @@ Estimaciones en días-persona a jornada completa. Ver supuestos en [`ROADMAP.md`
 |---|---|---|---|
 | SK-040 | `Bootstrap` y flujo de escenas mínimo (arranque → juego) | 3 | SK-010 |
 | SK-041 | Ajuste de movimiento y combate a partir de pruebas en mano | 5 | SK-003 |
-| SK-042 | Revisión de legibilidad: separar el carmesí del jugador del carmesí del entorno | 2 | SK-003 |
+| SK-042 | **Prioridad alta tras la verificación**: la imagen está saturada de rojo; el personaje compite con el fondo | 4 | SK-003 |
 
 **Total Fase 1 ≈ 41 días-persona (≈ 6 semanas a jornada completa).**
 
@@ -142,4 +142,5 @@ Las decisiones narrativas abiertas están listadas al completo en
 | 2026-11-10 | — | Añadidos 10 archivos `.meta` de Unity ausentes | 13 `.meta` para 13 archivos |
 | 2026-11-10 | — | Escena del prototipo añadida a Build Settings como escena 0 | `EditorBuildSettings.asset` |
 | 2026-11-10 | — | Plan maestro, arquitectura objetivo, biblia narrativa y de personajes | `docs/` |
-| 2026-11-03 | — | Mejora del prototipo: rig procedural, feel de combate, IA enemiga, entorno ampliado | Commit `2b6062d`; **sin verificar en Unity** |
+| 2026-11-10 | SK-002/003/005 | Primera verificación real en Unity: compila, ejecuta, 2 fallos corregidos | Play Mode limpio: 0 errores, 0 excepciones, 0 avisos |
+| 2026-11-03 | — | Mejora del prototipo: rig procedural, feel de combate, IA enemiga, entorno ampliado | Commit `2b6062d`; verificado el 2026-11-10 |
