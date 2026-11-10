@@ -41,7 +41,10 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
 
         private readonly List<Material> runtimeMaterials = new();
         private readonly List<GameObject> cameraAttached = new();
-        private readonly MaterialPropertyBlock block = new();
+        // Unity prohibe crear un MaterialPropertyBlock en un inicializador de campo
+        // de MonoBehaviour: se crea de forma diferida en el primer uso.
+        private MaterialPropertyBlock propertyBlock;
+        private MaterialPropertyBlock Block => propertyBlock ??= new MaterialPropertyBlock();
 
         private Transform generatedRoot;
         private Camera sceneCamera;
@@ -274,9 +277,9 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
                 if (tile > 0f)
                 {
                     // Texture repeats once per `tile` world units instead of stretching over the whole cube.
-                    renderer.GetPropertyBlock(block);
-                    block.SetVector("_BaseMap_ST", new Vector4(Mathf.Max(0.25f, scale.x / tile), Mathf.Max(0.25f, scale.y / tile), 0f, 0f));
-                    renderer.SetPropertyBlock(block);
+                    renderer.GetPropertyBlock(Block);
+                    Block.SetVector("_BaseMap_ST", new Vector4(Mathf.Max(0.25f, scale.x / tile), Mathf.Max(0.25f, scale.y / tile), 0f, 0f));
+                    renderer.SetPropertyBlock(Block);
                 }
             }
 
@@ -311,9 +314,9 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             renderer.shadowCastingMode = ShadowCastingMode.Off;
             renderer.receiveShadows = false;
 
-            renderer.GetPropertyBlock(block);
-            PrototypeMaterials.SetTint(block, tint);
-            renderer.SetPropertyBlock(block);
+            renderer.GetPropertyBlock(Block);
+            PrototypeMaterials.SetTint(Block, tint);
+            renderer.SetPropertyBlock(Block);
             return go;
         }
 

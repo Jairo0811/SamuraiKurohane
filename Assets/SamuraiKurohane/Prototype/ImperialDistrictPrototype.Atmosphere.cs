@@ -175,7 +175,10 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             ParticleSystem.VelocityOverLifetimeModule vel = ps.velocityOverLifetime;
             vel.enabled = true;
             vel.space = ParticleSystemSimulationSpace.World;
-            vel.x = -2.2f;
+            // Los tres ejes deben declararse en el mismo modo de curva.
+            vel.x = new ParticleSystem.MinMaxCurve(-2.2f);
+            vel.y = new ParticleSystem.MinMaxCurve(0f);
+            vel.z = new ParticleSystem.MinMaxCurve(0f);
 
             ParticleSystemRenderer renderer = go.GetComponent<ParticleSystemRenderer>();
             renderer.renderMode = ParticleSystemRenderMode.Stretch;
@@ -256,7 +259,7 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             vel.space = ParticleSystemSimulationSpace.World;
             vel.x = new ParticleSystem.MinMaxCurve(-1.4f, -0.2f);
             vel.y = rising ? new ParticleSystem.MinMaxCurve(0.4f, 1.2f) : new ParticleSystem.MinMaxCurve(-fallSpeed * 0.35f, -fallSpeed * 0.1f);
-            vel.z = 0f;
+            vel.z = new ParticleSystem.MinMaxCurve(0f, 0f);
 
             ParticleSystem.NoiseModule noise = ps.noise;
             noise.enabled = true;
