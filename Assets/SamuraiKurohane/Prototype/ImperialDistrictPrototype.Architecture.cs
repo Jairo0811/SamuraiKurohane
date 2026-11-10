@@ -362,8 +362,8 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
                 Light light = lightObject.AddComponent<Light>();
                 light.type = LightType.Point;
                 light.range = 9f;
-                light.intensity = 3.0f;
-                light.color = new Color(1f, 0.34f, 0.12f);
+                light.intensity = 1.6f;
+                light.color = new Color(1f, 0.58f, 0.36f);
                 light.shadows = LightShadows.None;
             }
         }
@@ -508,8 +508,8 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
                 Light light = lightObject.AddComponent<Light>();
                 light.type = LightType.Point;
                 light.range = 7f;
-                light.intensity = 3.4f;
-                light.color = new Color(1f, 0.12f, 0.025f);
+                light.intensity = 3.1f;
+                light.color = new Color(1f, 0.47f, 0.17f);
                 light.shadows = LightShadows.None;
             }
         }

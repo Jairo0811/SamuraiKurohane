@@ -202,11 +202,11 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
         {
             if (archetype == Archetype.Akio)
             {
-                matLacquer = Own(PrototypeMaterials.CreateLit("Akio Lacquer", new Color(0.035f, 0.035f, 0.042f), 0.35f, 0.78f));
-                matArmor = Own(PrototypeMaterials.CreateLit("Akio Armor", new Color(0.12f, 0.12f, 0.135f), 0.7f, 0.55f));
-                matCloth = Own(PrototypeMaterials.CreateLit("Akio Cloth", new Color(0.07f, 0.065f, 0.078f), 0f, 0.18f));
+                matLacquer = Own(PrototypeMaterials.CreateLit("Akio Lacquer", new Color(0.058f, 0.058f, 0.068f), 0.35f, 0.80f));
+                matArmor = Own(PrototypeMaterials.CreateLit("Akio Armor", new Color(0.165f, 0.165f, 0.185f), 0.7f, 0.62f));
+                matCloth = Own(PrototypeMaterials.CreateLit("Akio Cloth", new Color(0.105f, 0.098f, 0.115f), 0f, 0.20f));
                 matAccentCloth = Own(PrototypeMaterials.CreateLit("Akio Crimson Cloth", new Color(0.30f, 0.012f, 0.02f), 0f, 0.25f));
-                matCape = Own(PrototypeMaterials.CreateLit("Akio Cape", new Color(0.12f, 0.018f, 0.026f), 0f, 0.12f));
+                matCape = Own(PrototypeMaterials.CreateLit("Akio Cape", new Color(0.165f, 0.026f, 0.036f), 0f, 0.14f));
                 matGlow = Own(PrototypeMaterials.CreateLit("Akio Crimson Glow", new Color(0.35f, 0.01f, 0.015f), 0.1f, 0.2f,
                     new Color(5.0f, 0.03f, 0.025f)));
             }

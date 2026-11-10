@@ -34,16 +34,18 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             profile.name = "Prototype Runtime Profile";
 
             Bloom bloom = profile.Add<Bloom>(true);
-            bloom.threshold.Override(0.95f);
-            bloom.intensity.Override(0.85f);
-            bloom.scatter.Override(0.7f);
+            bloom.threshold.Override(1.05f);
+            bloom.intensity.Override(0.60f);
+            bloom.scatter.Override(0.58f);
 
             Vignette vignette = profile.Add<Vignette>(true);
-            vignette.intensity.Override(0.34f);
+            vignette.intensity.Override(0.46f);
             vignette.smoothness.Override(0.5f);
 
             ColorAdjustments adjustments = profile.Add<ColorAdjustments>(true);
-            adjustments.contrast.Override(14f);
+            adjustments.contrast.Override(16f);
+            adjustments.saturation.Override(-8f);
+            adjustments.postExposure.Override(-0.05f);
 
             Tonemapping tonemapping = profile.Add<Tonemapping>(true);
             tonemapping.mode.Override(TonemappingMode.ACES);

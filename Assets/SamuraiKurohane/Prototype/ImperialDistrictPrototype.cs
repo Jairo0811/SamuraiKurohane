@@ -31,6 +31,9 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
         private const float CameraBaseY = 2.2f;
         private const float OrthoSize = 8.7f;
 
+        /// <summary>Factor global de opacidad de los halos (1 = como se autoraron).</summary>
+        private const float GlowOpacity = 0.5f;
+
         [Header("Prototype")]
         [SerializeField] private int seed = 1108;
         [SerializeField] private bool buildOnAwake = true;
@@ -129,7 +132,7 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.ExponentialSquared;
             RenderSettings.fogDensity = 0.0032f;
-            RenderSettings.fogColor = new Color(0.19f, 0.04f, 0.05f);
+            RenderSettings.fogColor = new Color(0.085f, 0.028f, 0.038f);
         }
 
         // ------------------------------------------------------------------
@@ -155,44 +158,44 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             Light directional = FindFirstObjectByType<Light>();
             if (directional != null && directional.type == LightType.Directional)
             {
-                directional.color = new Color(0.62f, 0.15f, 0.12f);
-                directional.intensity = 2.2f;
+                directional.color = new Color(0.42f, 0.27f, 0.26f);
+                directional.intensity = 0.55f;
                 directional.transform.rotation = Quaternion.Euler(42f, -28f, 0f);
                 directional.shadows = LightShadows.Soft;
             }
 
             RenderSettings.ambientMode = AmbientMode.Flat;
-            RenderSettings.ambientLight = new Color(0.32f, 0.085f, 0.095f);
+            RenderSettings.ambientLight = new Color(0.115f, 0.068f, 0.085f);
         }
 
         private void CreateMaterials()
         {
-            stone = Track(PrototypeMaterials.CreateLit("Stone", new Color(0.36f, 0.28f, 0.29f), 0.12f, 0.62f,
+            stone = Track(PrototypeMaterials.CreateLit("Stone", new Color(0.17f, 0.13f, 0.14f), 0.12f, 0.80f,
                 null, PrototypeMaterials.GetPattern(PrototypePattern.StoneBrick)));
             darkStone = Track(PrototypeMaterials.CreateLit("Dark Stone", new Color(0.10f, 0.075f, 0.085f), 0.1f, 0.6f));
             blackMetal = Track(PrototypeMaterials.CreateLit("Black Metal", new Color(0.14f, 0.12f, 0.13f), 0.72f, 0.88f));
-            darkWood = Track(PrototypeMaterials.CreateLit("Dark Wood", new Color(0.27f, 0.085f, 0.08f), 0.08f, 0.5f,
+            darkWood = Track(PrototypeMaterials.CreateLit("Dark Wood", new Color(0.135f, 0.048f, 0.045f), 0.08f, 0.64f,
                 null, PrototypeMaterials.GetPattern(PrototypePattern.WoodPlanks)));
-            roof = Track(PrototypeMaterials.CreateLit("Roof", new Color(0.24f, 0.21f, 0.24f), 0.34f, 0.7f,
+            roof = Track(PrototypeMaterials.CreateLit("Roof", new Color(0.115f, 0.10f, 0.115f), 0.34f, 0.82f,
                 null, PrototypeMaterials.GetPattern(PrototypePattern.RoofTiles)));
             crimson = Track(PrototypeMaterials.CreateLit("Kurohane Crimson", new Color(0.38f, 0.012f, 0.018f), 0.22f, 0.34f));
             emissiveRed = Track(PrototypeMaterials.CreateLit("Neon Crimson", new Color(0.42f, 0.01f, 0.012f), 0.18f, 0.2f,
-                new Color(5.2f, 0.035f, 0.025f)));
-            lanternGlow = Track(PrototypeMaterials.CreateLit("Lantern Glow", new Color(1f, 0.20f, 0.025f), 0f, 0.12f,
-                new Color(6.5f, 0.6f, 0.05f)));
-            warmWindow = Track(PrototypeMaterials.CreateLit("Warm Window", new Color(1f, 0.45f, 0.12f), 0f, 0.1f,
-                new Color(3.4f, 1.0f, 0.18f)));
+                new Color(1.9f, 0.016f, 0.012f)));
+            lanternGlow = Track(PrototypeMaterials.CreateLit("Lantern Glow", new Color(1f, 0.42f, 0.12f), 0f, 0.12f,
+                new Color(2.6f, 0.95f, 0.22f)));
+            warmWindow = Track(PrototypeMaterials.CreateLit("Warm Window", new Color(0.95f, 0.62f, 0.28f), 0f, 0.1f,
+                new Color(1.15f, 0.62f, 0.2f)));
             moonMaterial = Track(PrototypeMaterials.CreateLit("Blood Moon", new Color(0.55f, 0.02f, 0.025f), 0f, 0.1f,
                 new Color(2.7f, 0.02f, 0.03f)));
             waterMaterial = Track(PrototypeMaterials.CreateLit("Canal", new Color(0.04f, 0.015f, 0.022f), 0.72f, 0.5f,
                 new Color(0.22f, 0.012f, 0.02f)));
 
             // Atmospheric perspective: further layers are lighter and redder (the fog does not reach them).
-            silhouetteNear = Track(PrototypeMaterials.CreateLit("Silhouette Near", new Color(0.055f, 0.022f, 0.032f), 0f, 0.3f));
-            silhouetteMid = Track(PrototypeMaterials.CreateLit("Silhouette Mid", new Color(0.11f, 0.032f, 0.048f), 0f, 0.3f,
-                new Color(0.05f, 0.006f, 0.01f)));
-            silhouetteFar = Track(PrototypeMaterials.CreateLit("Silhouette Far", new Color(0.19f, 0.045f, 0.065f), 0f, 0.3f,
-                new Color(0.12f, 0.012f, 0.02f)));
+            silhouetteNear = Track(PrototypeMaterials.CreateLit("Silhouette Near", new Color(0.017f, 0.010f, 0.014f), 0f, 0.3f));
+            silhouetteMid = Track(PrototypeMaterials.CreateLit("Silhouette Mid", new Color(0.040f, 0.018f, 0.027f), 0f, 0.3f,
+                new Color(0.022f, 0.004f, 0.007f)));
+            silhouetteFar = Track(PrototypeMaterials.CreateLit("Silhouette Far", new Color(0.078f, 0.029f, 0.043f), 0f, 0.3f,
+                new Color(0.05f, 0.007f, 0.012f)));
 
             glowRed = Track(PrototypeMaterials.CreateVfx("Glow Red", Color.white, true));
             glowAmber = Track(PrototypeMaterials.CreateVfx("Glow Amber", Color.white, true));
@@ -315,7 +318,9 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
             renderer.receiveShadows = false;
 
             renderer.GetPropertyBlock(Block);
-            PrototypeMaterials.SetTint(Block, tint);
+            // Un unico mando para la densidad de halos. Son decenas en pantalla y, sumados,
+            // son la causa principal de que el fondo compita con el personaje.
+            PrototypeMaterials.SetTint(Block, new Color(tint.r, tint.g, tint.b, tint.a * GlowOpacity));
             renderer.SetPropertyBlock(Block);
             return go;
         }

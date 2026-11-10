@@ -54,21 +54,66 @@ namespace JMGameStudios.SamuraiKurohane.Prototype
 
                 SamuraiVisualRig rig = SamuraiVisualRig.Build(enemy.transform, SamuraiVisualRig.Archetype.ImperialGuard);
                 target.Initialize(player, rig, -HalfLength + 1.5f, HalfLength - 1.5f);
+
+                AttachReadabilityLights(enemy.transform);
             }
+        }
+
+        /// <summary>
+        /// Clave calida delante y recorte frio detras. Es lo unico que garantiza que un
+        /// personaje se lea sobre un fondo oscuro, pase lo que pase con la luz del entorno.
+        /// </summary>
+        private static void AttachReadabilityLights(Transform character)
+        {
+            GameObject keyObject = new("Readability Key");
+            keyObject.transform.SetParent(character, false);
+            keyObject.transform.localPosition = new Vector3(0f, 2.0f, -2.2f);
+
+            Light key = keyObject.AddComponent<Light>();
+            key.type = LightType.Point;
+            key.range = 5.5f;
+            key.intensity = 3.6f;
+            key.color = new Color(1f, 0.6f, 0.42f);
+            key.shadows = LightShadows.None;
+
+            GameObject rimObject = new("Readability Rim");
+            rimObject.transform.SetParent(character, false);
+            rimObject.transform.localPosition = new Vector3(0f, 1.9f, 1.8f);
+
+            Light rim = rimObject.AddComponent<Light>();
+            rim.type = LightType.Point;
+            rim.range = 5f;
+            rim.intensity = 5.0f;
+            rim.color = new Color(0.66f, 0.8f, 1f);
+            rim.shadows = LightShadows.None;
         }
 
         private void BuildHeroFocusLight(Transform player)
         {
-            GameObject lightObject = new("Hero Focus Light");
-            lightObject.transform.SetParent(player, false);
-            lightObject.transform.localPosition = new Vector3(0.4f, 2.2f, -2.4f);
+            // Luz clave calida, delante y arriba: define el volumen de la armadura.
+            GameObject keyObject = new("Hero Key Light");
+            keyObject.transform.SetParent(player, false);
+            keyObject.transform.localPosition = new Vector3(0.4f, 2.2f, -2.4f);
 
-            Light light = lightObject.AddComponent<Light>();
-            light.type = LightType.Point;
-            light.range = 8f;
-            light.intensity = 2.4f;
-            light.color = new Color(1f, 0.55f, 0.4f);
-            light.shadows = LightShadows.None;
+            Light key = keyObject.AddComponent<Light>();
+            key.type = LightType.Point;
+            key.range = 7f;
+            key.intensity = 4.2f;
+            key.color = new Color(1f, 0.62f, 0.45f);
+            key.shadows = LightShadows.None;
+
+            // Luz de recorte fria, detras: es lo que separa la silueta de Akio del
+            // fondo calido y rojo. Sin ella el personaje se funde con el entorno.
+            GameObject rimObject = new("Hero Rim Light");
+            rimObject.transform.SetParent(player, false);
+            rimObject.transform.localPosition = new Vector3(-0.2f, 1.9f, 1.9f);
+
+            Light rim = rimObject.AddComponent<Light>();
+            rim.type = LightType.Point;
+            rim.range = 6.5f;
+            rim.intensity = 6.0f;
+            rim.color = new Color(0.62f, 0.78f, 1f);
+            rim.shadows = LightShadows.None;
         }
 
         private void BuildCameraRig(AkioPrototypeController player)
